@@ -3,6 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Play, Star, Users, Zap, Shield, Brain, ArrowRight, CheckCircle } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 export default function Home() {
   return (
     <div className="min-h-screen">

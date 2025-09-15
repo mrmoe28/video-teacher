@@ -3,7 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Brain, FileText, Play, Sparkles } from "lucide-react";
 
-export default function VideoDetailPage({ params }: { params: { id: string } }) {
+export default function VideoDetailPage(props: unknown) {
+  const id = (props as { params?: { id?: string } })?.params?.id ?? "unknown";
   return (
     <div className="container mx-auto px-4 py-10">
       <div className="grid lg:grid-cols-3 gap-8">
@@ -15,7 +16,7 @@ export default function VideoDetailPage({ params }: { params: { id: string } }) 
           <Card className="glass-effect">
             <CardHeader>
               <CardTitle className="text-white">Video Overview</CardTitle>
-              <CardDescription className="text-gray-300">ID: {params.id}</CardDescription>
+              <CardDescription className="text-gray-300">ID: {id}</CardDescription>
             </CardHeader>
             <CardContent className="text-gray-300">
               Short description of the video content, topics, and objectives.

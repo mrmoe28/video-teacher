@@ -4,6 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Upload, Link2, Loader2 } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 export default function UploadPage() {
   return (
     <div className="container mx-auto px-4 py-10">
