@@ -18,15 +18,22 @@ export function AnimatedCounter({
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    let startTime: number;
-    let animationFrame: number;
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (prefersReducedMotion) {
+      setCount(end);
+      return;
+    }
+
+    let startTime: number | null = null;
+    let animationFrame: number | null = null;
 
     const animate = (currentTime: number) => {
-      if (!startTime) startTime = currentTime;
+      if (startTime === null) startTime = currentTime;
       const progress = Math.min((currentTime - startTime) / duration, 1);
-      
+
       setCount(Math.floor(progress * end));
-      
+
       if (progress < 1) {
         animationFrame = requestAnimationFrame(animate);
       }
@@ -42,7 +49,7 @@ export function AnimatedCounter({
   }, [end, duration]);
 
   return (
-    <span className="font-bold text-4xl md:text-6xl gradient-text">
+    <span className="font-bold text-4xl md:text-6xl gradient-text" aria-live="polite">
       {prefix}{count.toLocaleString()}{suffix}
     </span>
   );
