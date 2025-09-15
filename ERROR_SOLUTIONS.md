@@ -36,3 +36,29 @@
 
 **Date Fixed:** $(date)
 **Project:** video-teacher
+
+### Excluding Files from Vercel Deployment
+
+**Problem:** Documentation files (README.md, etc.) are being included in Vercel deployment, increasing bundle size unnecessarily.
+
+**Solution:**
+1. **Create `.vercelignore` file** to exclude documentation and development files
+2. **Update `vercel.json`** with proper build configuration
+3. **Use `ignoreCommand`** to skip builds when only documentation changes
+
+**Example `.vercelignore`:**
+```
+# Documentation files
+README.md
+*.md
+.env.local
+.env.development
+```
+
+**Prevention:**
+- Always create `.vercelignore` for documentation files
+- Use `ignoreCommand` in vercel.json for smart builds
+- Keep production bundle minimal
+
+**Date Fixed:** $(date)
+**Project:** video-teacher

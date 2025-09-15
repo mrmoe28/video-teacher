@@ -19,6 +19,10 @@
       "NEXT_TELEMETRY_DISABLED": "1"
     }
   },
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- .",
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "installCommand": "npm install --frozen-lockfile",
   "headers": [
     {
       "source": "/(.*)",
