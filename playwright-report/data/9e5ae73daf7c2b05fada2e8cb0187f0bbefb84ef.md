@@ -1,0 +1,114 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - link "Skip to content" [ref=e2] [cursor=pointer]:
+    - /url: "#main"
+  - main [ref=e5]:
+    - generic [ref=e6]:
+      - navigation "Primary" [ref=e7]:
+        - generic [ref=e8]:
+          - generic [ref=e9]:
+            - img [ref=e12]
+            - generic [ref=e20]: VideoTeacher
+          - button "Get Started" [ref=e21]
+      - generic [ref=e23]:
+        - generic [ref=e24]: 🚀 AI-Powered Learning Platform
+        - heading "Transform Any Video Into Interactive Learning" [level=1] [ref=e25]:
+          - generic [ref=e26]: Transform Any Video
+          - text: Into Interactive Learning
+        - paragraph [ref=e27]: Turn YouTube videos into comprehensive study materials with AI-powered analysis, transcripts, flashcards, and personalized learning paths.
+        - generic [ref=e28]:
+          - button "Start Learning Now" [ref=e29]:
+            - text: Start Learning Now
+            - img [ref=e30]
+          - button "Watch Demo" [ref=e32]:
+            - img [ref=e33]
+            - text: Watch Demo
+      - generic [ref=e35]:
+        - generic [ref=e36]:
+          - heading "Powerful Features for Modern Learning" [level=2] [ref=e37]:
+            - text: Powerful Features for
+            - generic [ref=e38]: Modern Learning
+          - paragraph [ref=e39]: Everything you need to transform videos into engaging, interactive learning experiences.
+        - generic [ref=e40]:
+          - generic [ref=e42]:
+            - img [ref=e44]
+            - heading "AI Analysis" [level=3] [ref=e52]
+            - paragraph [ref=e53]: Advanced AI analyzes video content to extract key concepts, insights, and learning objectives.
+          - generic [ref=e55]:
+            - img [ref=e57]
+            - heading "Smart Transcripts" [level=3] [ref=e59]
+            - paragraph [ref=e60]: Get accurate, timestamped transcripts with speaker identification and content categorization.
+          - generic [ref=e62]:
+            - img [ref=e64]
+            - heading "Study Groups" [level=3] [ref=e69]
+            - paragraph [ref=e70]: Collaborate with others, share insights, and learn together in interactive study sessions.
+          - generic [ref=e72]:
+            - img [ref=e74]
+            - heading "Progress Tracking" [level=3] [ref=e76]
+            - paragraph [ref=e77]: Monitor your learning progress with detailed analytics and personalized recommendations.
+          - generic [ref=e79]:
+            - img [ref=e81]
+            - heading "Flashcards" [level=3] [ref=e83]
+            - paragraph [ref=e84]: Generate intelligent flashcards from video content for effective memorization and review.
+          - generic [ref=e86]:
+            - img [ref=e88]
+            - heading "Quizzes & Tests" [level=3] [ref=e91]
+            - paragraph [ref=e92]: Create and take quizzes based on video content to test your understanding and retention.
+      - generic [ref=e95]:
+        - heading "Ready to Transform Your Learning?" [level=2] [ref=e96]
+        - paragraph [ref=e97]: Join thousands of learners already using VideoTeacher to study smarter.
+        - generic [ref=e98]:
+          - button "Start Free Trial" [ref=e99]:
+            - text: Start Free Trial
+            - img [ref=e100]
+          - button "Learn More" [ref=e102]
+      - generic [ref=e104]:
+        - generic [ref=e105]:
+          - generic [ref=e106]:
+            - generic [ref=e107]:
+              - img [ref=e109]
+              - generic [ref=e117]: VideoTeacher
+            - paragraph [ref=e118]: Transform any video into an interactive learning experience with AI-powered analysis.
+          - generic [ref=e119]:
+            - heading "Product" [level=3] [ref=e120]
+            - list [ref=e121]:
+              - listitem [ref=e122]:
+                - link "Features" [ref=e123] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=e124]:
+                - link "Pricing" [ref=e125] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=e126]:
+                - link "API" [ref=e127] [cursor=pointer]:
+                  - /url: "#"
+          - generic [ref=e128]:
+            - heading "Company" [level=3] [ref=e129]
+            - list [ref=e130]:
+              - listitem [ref=e131]:
+                - link "About" [ref=e132] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=e133]:
+                - link "Blog" [ref=e134] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=e135]:
+                - link "Careers" [ref=e136] [cursor=pointer]:
+                  - /url: "#"
+          - generic [ref=e137]:
+            - heading "Support" [level=3] [ref=e138]
+            - list [ref=e139]:
+              - listitem [ref=e140]:
+                - link "Help Center" [ref=e141] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=e142]:
+                - link "Contact" [ref=e143] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=e144]:
+                - link "Status" [ref=e145] [cursor=pointer]:
+                  - /url: "#"
+        - paragraph [ref=e147]: © 2024 VideoTeacher. All rights reserved.
+  - button "Open Next.js Dev Tools" [ref=e153] [cursor=pointer]:
+    - img [ref=e154] [cursor=pointer]
+  - alert [ref=e157]
+```

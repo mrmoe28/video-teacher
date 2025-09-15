@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Navigation */}
-      <nav className="sticky top-0 z-40 glass-strong">
+      <nav className="sticky top-0 z-40 glass-strong" aria-label="Primary">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-9 h-9 rounded-xl bg-[conic-gradient(from_180deg_at_50%_50%,theme(colors.violet.500),theme(colors.pink.500),theme(colors.cyan.500),theme(colors.violet.500))] p-[1px]">
