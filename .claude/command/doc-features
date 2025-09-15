@@ -291,3 +291,38 @@ This document should be updated whenever:
 - Major configuration changes happen
 
 **Responsibility**: Both Claude Code instances and Cursor development should reference and update this document to maintain accurate feature tracking and development coordination.
+
+## 📋 Additional Technical Findings
+
+### API Route Structure Analysis
+Based on directory structure analysis, the following API endpoints are planned but not yet implemented:
+- `/api/analyze` - AI content analysis processing
+- `/api/crawl` - YouTube video crawling and metadata extraction
+- `/api/deck` - Deck creation and management operations
+- `/api/progress` - Learning progress tracking and analytics
+- `/api/sse` - Server-sent events for real-time updates
+- `/api/transcribe` - Transcript generation and processing
+
+### Database Connection Architecture
+- **Singleton Pattern**: Optimized connection pooling for Vercel serverless functions
+- **Configuration**: Limited to 1 connection max, 0ms idle timeout, 10s connection timeout
+- **Environment**: Automatic logging in development mode for debugging
+- **Schema Import**: Full schema imported for type inference and relationship mapping
+
+### Component Architecture Findings
+- **UI Components**: Professional component library with Card, Button, Badge, Tabs, Separator
+- **Animation Components**: Feature cards with hover effects and animated counters
+- **Error Handling**: Dedicated error.tsx and loading.tsx for enhanced UX
+- **Typography**: Custom gradient text utilities and glass-morphism CSS classes
+
+### Build & Performance Optimizations
+- **Turbopack**: Used for both development and production builds for maximum speed
+- **Next.js 15**: Latest version with App Router for improved performance
+- **Vercel Functions**: Optimized with specific memory allocation (1024MB) and timeout (60s)
+- **Sitemap**: Automated generation with proper caching headers for SEO
+
+### Security & Quality Assurance
+- **TypeScript Strict Mode**: Full type safety enforcement across the codebase
+- **Environment Protection**: Secure API key management with proper validation
+- **Testing Strategy**: Multi-layer testing with unit (Vitest) and E2E (Playwright) frameworks
+- **Code Quality**: ESLint configuration with Next.js best practices
