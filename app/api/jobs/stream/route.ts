@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
       let lastStatus = '';
       let lastProgress = -1;
 
-      const sendUpdate = (data: any) => {
+      const sendUpdate = (data: { type: string; message?: string; jobId?: string; status?: string; progress?: number; videoId?: string | null; error?: string | null; updatedAt?: Date }) => {
         if (!isActive) return;
 
         const sseData = `data: ${JSON.stringify(data)}\n\n`;
@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
               type: 'update',
               jobId: job.id,
               status: job.status,
-              progress: job.progressInt,
+              progress: job.progressInt ?? 0,
               videoId: job.videoId,
               error: job.errorText,
               updatedAt: job.updatedAt

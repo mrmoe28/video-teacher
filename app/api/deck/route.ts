@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
     const transcriptData = transcript[0];
 
     // Extract text from transcript JSON
-    const transcriptText = (transcriptData.text as any[])
+    const transcriptText = (transcriptData.text as Array<{ text: string }>)
       .map(item => item.text)
       .join(' ');
 
@@ -144,7 +144,7 @@ export async function POST(request: NextRequest) {
     let deckContent;
     try {
       deckContent = JSON.parse(result);
-    } catch (parseError) {
+    } catch {
       console.error('Failed to parse AI response:', result);
       return NextResponse.json(
         { error: 'Invalid response format from AI' },
@@ -275,7 +275,7 @@ export async function GET(request: NextRequest) {
       tags: slide.bullets.slice(1).map(tag => tag.replace('#', ''))
     }));
 
-    const analysis = deck!.analysis as any;
+    const analysis = deck!.analysis as { keyInsights?: string[]; pitfalls?: string[]; glossary?: Array<{ term: string; definition: string }>; faqs?: Array<{ q: string; a: string }> } | null;
 
     const response: DeckResponse = {
       deckId: deck!.id,

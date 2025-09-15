@@ -18,30 +18,28 @@ const getProgressSchema = z.object({
 });
 
 // Response schemas
-const progressResponseSchema = z.object({
-  videoId: z.string(),
-  userId: z.string().optional(),
-  percent: z.number(),
-  lastPosition: z.number().optional(),
-  updatedAt: z.string()
-});
 
-const videoProgressResponseSchema = z.object({
-  video: z.object({
-    id: z.string(),
-    title: z.string(),
-    channel: z.string(),
-    duration: z.number(),
-    thumbnailUrl: z.string().optional(),
-    url: z.string()
-  }),
-  hasTranscript: z.boolean(),
-  hasDeck: z.boolean(),
-  progress: progressResponseSchema.optional()
-});
+export type ProgressResponse = {
+  videoId: string;
+  userId?: string;
+  percent: number;
+  lastPosition?: number;
+  updatedAt: string;
+};
 
-export type ProgressResponse = z.infer<typeof progressResponseSchema>;
-export type VideoProgressResponse = z.infer<typeof videoProgressResponseSchema>;
+export type VideoProgressResponse = {
+  video: {
+    id: string;
+    title: string;
+    channel: string;
+    duration: number;
+    thumbnailUrl?: string;
+    url: string;
+  };
+  hasTranscript: boolean;
+  hasDeck: boolean;
+  progress?: ProgressResponse;
+};
 
 // In-memory progress store (replace with proper database table in production)
 const progressStore = new Map<string, {

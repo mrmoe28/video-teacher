@@ -12,17 +12,15 @@ const crawlSchema = z.object({
 });
 
 // Response schema
-const crawlResponseSchema = z.object({
-  videoId: z.string(),
-  title: z.string(),
-  channel: z.string(),
-  duration: z.number(),
-  thumbnailUrl: z.string().optional(),
-  hasCaption: z.boolean(),
-  transcriptPreview: z.string().optional()
-});
-
-export type CrawlResponse = z.infer<typeof crawlResponseSchema>;
+export type CrawlResponse = {
+  videoId: string;
+  title: string;
+  channel: string;
+  duration: number;
+  thumbnailUrl?: string;
+  hasCaption: boolean;
+  transcriptPreview?: string;
+};
 
 export async function POST(request: NextRequest) {
   try {
@@ -90,7 +88,7 @@ export async function POST(request: NextRequest) {
       hasCaption = true;
 
       // Convert transcript format and create preview
-      captionsData = transcript.map((item: any) => ({
+      captionsData = transcript.map((item: { offset: number; duration: number; text: string }) => ({
         start: item.offset / 1000, // Convert ms to seconds
         end: (item.offset + item.duration) / 1000,
         text: item.text
@@ -99,11 +97,11 @@ export async function POST(request: NextRequest) {
       // Create a preview (first 200 characters)
       transcriptPreview = transcript
         .slice(0, 5)
-        .map((item: any) => item.text)
+        .map((item: { text: string }) => item.text)
         .join(' ')
         .substring(0, 200) + '...';
 
-    } catch (transcriptError) {
+    } catch {
       console.log('No captions available for video:', youtubeId);
       hasCaption = false;
     }

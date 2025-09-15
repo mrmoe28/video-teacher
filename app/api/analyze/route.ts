@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
     let analysisData;
     try {
       analysisData = JSON.parse(result);
-    } catch (parseError) {
+    } catch {
       throw new OpenAIAPIError('Invalid response format from AI');
     }
 

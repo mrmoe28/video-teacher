@@ -49,6 +49,7 @@
     "next-sitemap": "^4.2.3",
     "openai": "^5.20.2",
     "p-limit": "^7.1.1",
+    "postgres": "^3.4.7",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "serverless-http": "^4.0.0",

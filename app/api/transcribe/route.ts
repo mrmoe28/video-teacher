@@ -14,15 +14,12 @@ const transcribeSchema = z.object({
   message: "Either url, videoId, or uploadStub must be provided"
 });
 
-// Response schema
-const transcribeResponseSchema = z.object({
-  jobId: z.string(),
-  status: z.enum(['queued', 'crawling', 'transcribing', 'analyzing', 'ready', 'error']),
-  videoId: z.string().optional(),
-  message: z.string()
-});
-
-export type TranscribeResponse = z.infer<typeof transcribeResponseSchema>;
+export type TranscribeResponse = {
+  jobId: string;
+  status: 'queued' | 'crawling' | 'transcribing' | 'analyzing' | 'ready' | 'error';
+  videoId?: string;
+  message: string;
+};
 
 export async function POST(request: NextRequest) {
   try {
@@ -95,7 +92,7 @@ export async function POST(request: NextRequest) {
     // For now, we'll simulate the job creation
     const response: TranscribeResponse = {
       jobId: newJob.id,
-      status: newJob.status as any,
+      status: newJob.status as TranscribeResponse['status'],
       videoId,
       message: videoId
         ? 'Transcription job queued for existing video'

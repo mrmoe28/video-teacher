@@ -1,28 +1,12 @@
-import { drizzle } from 'drizzle-orm/neon-serverless';
-import { Pool } from '@neondatabase/serverless';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
 import * as schema from './drizzle/schema';
 
-// Create a singleton pool for better performance on Vercel
-let pool: Pool | null = null;
+// Use postgres-js driver for better compatibility
+const connectionString = process.env.DATABASE_URL!;
+const client = postgres(connectionString, { max: 1 });
 
-function getPool() {
-  if (!pool) {
-    if (!process.env.DATABASE_URL) {
-      throw new Error('DATABASE_URL environment variable is not set');
-    }
-    
-    pool = new Pool({ 
-      connectionString: process.env.DATABASE_URL,
-      // Optimize for serverless
-      max: 1, // Limit connections for serverless
-      idleTimeoutMillis: 0,
-      connectionTimeoutMillis: 10000,
-    });
-  }
-  return pool;
-}
-
-export const db = drizzle(getPool(), { 
+export const db = drizzle(client, { 
   schema,
   logger: process.env.NODE_ENV === 'development'
 });

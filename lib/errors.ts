@@ -127,7 +127,7 @@ export function errorToResponse(error: Error) {
         message: error.message,
         code: error.code,
         statusCode: error.statusCode,
-        ...(error instanceof ValidationError && error.details && { details: error.details })
+        ...(error instanceof ValidationError && error.details ? { details: error.details } : {})
       },
       status: error.statusCode
     };
