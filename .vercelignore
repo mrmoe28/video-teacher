@@ -1,0 +1,6 @@
+README.md
+*.test.ts
+*.spec.ts
+tests/
+.env.local
+.env.example

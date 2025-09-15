@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "functions": {
+    "api/express.ts": {
+      "runtime": "nodejs20.x",
+      "memory": 1024,
+      "maxDuration": 60
+    },
+    "app/api/transcribe/route.ts": {
+      "runtime": "nodejs20.x",
+      "memory": 1024,
+      "maxDuration": 60
+    },
+    "app/api/analyze/route.ts": {
+      "runtime": "nodejs20.x",
+      "memory": 1024,
+      "maxDuration": 60
+    }
+  }
+}
