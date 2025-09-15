@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, integer, boolean, jsonb, uuid, primaryKey } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, integer, boolean, jsonb, uuid, primaryKey, index } from 'drizzle-orm/pg-core';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 
 // Videos table
@@ -11,7 +11,11 @@ export const videos = pgTable('videos', {
   durationSeconds: integer('duration_s'),
   thumbnailUrl: text('thumbnail_url'),
   createdAt: timestamp('created_at').defaultNow().notNull()
-});
+}, (table) => ({
+  urlIdx: index('videos_url_idx').on(table.url),
+  channelIdx: index('videos_channel_idx').on(table.channel),
+  createdAtIdx: index('videos_created_at_idx').on(table.createdAt)
+}));
 
 // Transcripts table
 export const transcripts = pgTable('transcripts', {
@@ -21,7 +25,10 @@ export const transcripts = pgTable('transcripts', {
   language: text('language').default('en'),
   text: jsonb('text').notNull().$type<Array<{start: number, end: number, text: string}>>(),
   createdAt: timestamp('created_at').defaultNow().notNull()
-});
+}, (table) => ({
+  videoIdIdx: index('transcripts_video_id_idx').on(table.videoId),
+  sourceIdx: index('transcripts_source_idx').on(table.source)
+}));
 
 // Decks table
 export const decks = pgTable('decks', {
@@ -36,7 +43,9 @@ export const decks = pgTable('decks', {
     faqs: Array<{q: string, a: string}>
   }>(),
   createdAt: timestamp('created_at').defaultNow().notNull()
-});
+}, (table) => ({
+  videoIdIdx: index('decks_video_id_idx').on(table.videoId)
+}));
 
 // Slides table
 export const slides = pgTable('slides', {
@@ -47,7 +56,10 @@ export const slides = pgTable('slides', {
   bullets: jsonb('bullets').notNull().$type<string[]>(),
   startSeconds: integer('start_s'),
   endSeconds: integer('end_s')
-});
+}, (table) => ({
+  deckIdIdx: index('slides_deck_id_idx').on(table.deckId),
+  idxOrderIdx: index('slides_idx_order_idx').on(table.deckId, table.idx)
+}));
 
 // Steps table
 export const steps = pgTable('steps', {
@@ -70,7 +82,11 @@ export const jobs = pgTable('jobs', {
   errorText: text('error_text'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull()
-});
+}, (table) => ({
+  statusIdx: index('jobs_status_idx').on(table.status),
+  videoIdIdx: index('jobs_video_id_idx').on(table.videoId),
+  createdAtIdx: index('jobs_created_at_idx').on(table.createdAt)
+}));
 
 // Quizzes table (additional for quiz storage)
 export const quizzes = pgTable('quizzes', {
@@ -95,7 +111,7 @@ export const users = pgTable('users', {
 
 // Accounts table for OAuth providers
 export const accounts = pgTable('accounts', {
-  id: uuid('id').primaryKey().defaultRandom(),
+  id: uuid('id').defaultRandom(),
   userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   type: text('type').notNull(),
   provider: text('provider').notNull(),
