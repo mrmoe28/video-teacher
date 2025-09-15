@@ -1,6 +1,5 @@
 import { pgTable, text, timestamp, integer, boolean, jsonb, uuid } from 'drizzle-orm/pg-core';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
-import { z } from 'zod';
 
 // Videos table
 export const videos = pgTable('videos', {
@@ -99,11 +98,20 @@ export const selectJobSchema = createSelectSchema(jobs);
 export const insertQuizSchema = createInsertSchema(quizzes);
 export const selectQuizSchema = createSelectSchema(quizzes);
 
-// Type exports
-export type Video = z.infer<typeof selectVideoSchema>;
-export type Transcript = z.infer<typeof selectTranscriptSchema>;
-export type Deck = z.infer<typeof selectDeckSchema>;
-export type Slide = z.infer<typeof selectSlideSchema>;
-export type Step = z.infer<typeof selectStepSchema>;
-export type Job = z.infer<typeof selectJobSchema>;
-export type Quiz = z.infer<typeof selectQuizSchema>;
+// Type exports from table selection
+export type Video = typeof videos.$inferSelect;
+export type Transcript = typeof transcripts.$inferSelect;
+export type Deck = typeof decks.$inferSelect;
+export type Slide = typeof slides.$inferSelect;
+export type Step = typeof steps.$inferSelect;
+export type Job = typeof jobs.$inferSelect;
+export type Quiz = typeof quizzes.$inferSelect;
+
+// Insert types
+export type NewVideo = typeof videos.$inferInsert;
+export type NewTranscript = typeof transcripts.$inferInsert;
+export type NewDeck = typeof decks.$inferInsert;
+export type NewSlide = typeof slides.$inferInsert;
+export type NewStep = typeof steps.$inferInsert;
+export type NewJob = typeof jobs.$inferInsert;
+export type NewQuiz = typeof quizzes.$inferInsert;

@@ -4,8 +4,10 @@ const nextConfig: NextConfig = {
   // Enable experimental features for better performance
   experimental: {
     // Enable server components logging in development
-    serverComponentsExternalPackages: ['@neondatabase/serverless'],
   },
+
+  // External packages for server components
+  serverExternalPackages: ['@neondatabase/serverless'],
   
   // Image optimization for Vercel
   images: {

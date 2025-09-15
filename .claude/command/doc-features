@@ -1,0 +1,275 @@
+# Video Teacher - Comprehensive Feature Documentation
+
+**Last Updated:** $(date '+%Y-%m-%d %H:%M:%S')
+**Version:** 0.1.0
+**Status:** Active Development
+
+## 🎯 Application Overview
+
+Video Teacher is an AI-powered learning platform that transforms YouTube videos into comprehensive, interactive educational experiences. The platform extracts video content, generates transcripts, creates structured learning materials, and provides interactive study tools.
+
+### Core Purpose
+- Convert YouTube videos into structured learning materials
+- Generate AI-powered educational content analysis
+- Create interactive study experiences with quizzes and progress tracking
+- Provide teachers and learners with comprehensive video-based educational tools
+
+## 🏗️ Architecture & Tech Stack
+
+### Frontend Stack
+- **Framework**: Next.js 15 with App Router
+- **Language**: TypeScript (strict mode)
+- **Styling**: Tailwind CSS 4 with PostCSS
+- **UI Components**: Radix UI primitives + custom components
+- **Icons**: Lucide React
+- **Animations**: Framer Motion
+- **Build Tool**: Turbopack (development & production)
+
+### Backend Stack
+- **Runtime**: Node.js 20.x
+- **Database**: PostgreSQL (Neon serverless)
+- **ORM**: Drizzle ORM with Zod validation
+- **AI/ML**: OpenAI GPT for content analysis
+- **Video Processing**: youtube-transcript, ytdl-core
+- **API**: Next.js API routes (App Router)
+
+### Infrastructure
+- **Deployment**: Vercel with automatic Git integration
+- **Database Hosting**: Neon (serverless PostgreSQL)
+- **Function Configuration**: 60s timeout, 1024MB memory
+- **Environment**: Serverless with connection pooling
+
+### Development Tools
+- **Testing**: Vitest (unit), Playwright (E2E)
+- **Linting**: ESLint with Next.js config
+- **Type Checking**: TypeScript strict mode
+- **Database Tools**: Drizzle Kit for migrations and studio
+- **Package Manager**: npm with frozen lockfile
+
+## 📊 Database Schema & Data Flow
+
+### Hierarchical Data Structure
+
+```
+Videos (root)
+├─ Transcripts (captions/whisper)
+├─ Decks (AI-generated presentations)
+   └─ Slides (timed content sections)
+      ├─ Steps (interactive checklists)
+      └─ Quizzes (comprehension tests)
+└─ Jobs (processing pipeline status)
+```
+
+### Core Tables
+
+#### Videos Table
+- **Purpose**: Store YouTube video metadata
+- **Key Fields**: `youtubeId` (unique), `title`, `channel`, `durationSeconds`, `thumbnailUrl`
+- **Relationships**: One-to-many with transcripts, decks, jobs
+
+#### Transcripts Table
+- **Purpose**: Store extracted/generated video transcripts
+- **Sources**: YouTube auto-captions or Whisper AI
+- **Format**: JSON array with `{start, end, text}` segments
+- **Relationships**: Belongs to video, cascade delete
+
+#### Decks Table
+- **Purpose**: AI-generated educational presentations
+- **Content**: Title, summary, AI analysis (keyInsights, pitfalls, glossary, FAQs)
+- **Relationships**: Belongs to video, one-to-many with slides
+
+#### Slides Table
+- **Purpose**: Individual presentation slides with timing
+- **Content**: Title, bullet points (JSON array), start/end timestamps
+- **Relationships**: Belongs to deck, one-to-many with steps/quizzes
+
+#### Steps Table
+- **Purpose**: Interactive checklist items for learning
+- **Features**: Progress tracking, video timestamp synchronization
+- **Relationships**: Belongs to slide
+
+#### Quizzes Table
+- **Purpose**: Comprehension questions for slides
+- **Format**: Multiple choice with explanations
+- **Relationships**: Belongs to slide
+
+#### Jobs Table
+- **Purpose**: Processing pipeline status tracking
+- **Statuses**: queued → crawling → transcribing → analyzing → ready | error
+- **Features**: Progress tracking, error handling
+
+## 🔄 Processing Pipeline
+
+### Video Processing Flow
+
+1. **Input**: YouTube URL submitted
+2. **Crawling**: Extract metadata using ytdl-core
+3. **Transcription**:
+   - Try YouTube auto-captions first
+   - Fallback to Whisper AI if needed
+4. **AI Analysis**: OpenAI processes transcript for educational content
+5. **Content Generation**: Create decks, slides, steps, and quizzes
+6. **Ready**: Materials available for interactive learning
+
+### Job Status Tracking
+- Real-time progress updates
+- Error handling and recovery
+- Retry mechanisms for failed processes
+
+## 🎨 User Interface & Experience
+
+### Landing Page
+- **Design**: Modern gradient background with glass morphism
+- **Sections**: Hero, features grid, call-to-action, footer
+- **Components**: Navigation, buttons, cards with icons
+- **Responsive**: Mobile-first design with Tailwind breakpoints
+
+### Key UI Components
+- **Navigation**: Fixed header with logo and navigation links
+- **Hero Section**: Large typography with gradient text effects
+- **Feature Cards**: Icon-based cards showcasing capabilities
+- **Buttons**: Gradient backgrounds with hover effects
+- **Typography**: Geist font family (sans & mono)
+
+### Design System
+- **Colors**: Purple/pink gradient theme with dark background
+- **Typography**: Responsive scaling with font-feature-settings
+- **Spacing**: Consistent Tailwind spacing scale
+- **Components**: Radix UI primitives for accessibility
+
+## 🔧 Current Features (Implemented)
+
+### ✅ Infrastructure
+- [x] Next.js 15 with App Router setup
+- [x] Tailwind CSS 4 styling system
+- [x] PostgreSQL database with Drizzle ORM
+- [x] Vercel deployment configuration
+- [x] Environment variable management
+- [x] TypeScript strict configuration
+
+### ✅ Database Schema
+- [x] Complete schema with relationships
+- [x] Zod validation schemas
+- [x] Migration system with Drizzle Kit
+- [x] Type-safe database operations
+
+### ✅ Frontend Foundation
+- [x] Landing page with modern design
+- [x] Responsive navigation system
+- [x] Feature showcase sections
+- [x] SEO optimization with metadata
+- [x] UI component library setup
+
+### ✅ Development Workflow
+- [x] Comprehensive script commands
+- [x] Testing framework setup (Vitest + Playwright)
+- [x] Linting and type checking
+- [x] Database development tools
+
+## 🚧 Features In Development
+
+### Video Processing Engine
+- [ ] YouTube URL validation and metadata extraction
+- [ ] Transcript extraction (captions + Whisper fallback)
+- [ ] AI content analysis pipeline
+- [ ] Job queue management system
+
+### Interactive Learning Interface
+- [ ] Video player with synchronized content
+- [ ] Slide-based presentation view
+- [ ] Interactive checklists and progress tracking
+- [ ] Quiz system with immediate feedback
+
+### Content Management
+- [ ] Deck creation and editing interface
+- [ ] Slide management with timing controls
+- [ ] Quiz builder and question management
+- [ ] Content export and sharing features
+
+## 🎯 Planned Features (Roadmap)
+
+### Phase 1: Core Video Processing
+- YouTube video import and processing
+- Automatic transcript generation
+- AI-powered content analysis
+- Basic deck generation
+
+### Phase 2: Interactive Learning
+- Video player with content synchronization
+- Interactive slide presentations
+- Progress tracking and analytics
+- Quiz system implementation
+
+### Phase 3: Advanced Features
+- Multi-language support
+- Collaborative learning features
+- Advanced analytics dashboard
+- Content sharing and export tools
+
+### Phase 4: Platform Expansion
+- Support for additional video platforms
+- Mobile application
+- Teacher dashboard and classroom management
+- API for third-party integrations
+
+## 🔒 Security & Performance
+
+### Security Measures
+- Content Security Policy headers
+- CORS configuration
+- Input validation with Zod schemas
+- Environment variable protection
+- XSS and CSRF protection
+
+### Performance Optimizations
+- Turbopack for fast builds
+- Image optimization with Next.js
+- Database connection pooling
+- Serverless function optimization
+- Caching strategies
+
+## 🚀 Deployment & Operations
+
+### Vercel Configuration
+- Automatic deployments from Git
+- Function-specific timeout configurations
+- Environment variable management
+- Performance monitoring
+- Error tracking and logging
+
+### Database Operations
+- Automated migrations with Drizzle Kit
+- Connection pooling for serverless
+- Backup and recovery procedures
+- Performance monitoring
+
+## 📝 Development Guidelines
+
+### Code Organization
+- Colocation of related components
+- Separation of concerns (UI, logic, data)
+- Consistent naming conventions
+- Type-first development approach
+
+### Testing Strategy
+- Unit tests for utility functions
+- Integration tests for database operations
+- E2E tests for critical user flows
+- Performance testing for video processing
+
+### Database Development
+- Schema-first approach with migrations
+- Type safety with Drizzle and Zod
+- Proper indexing for performance
+- Foreign key constraints for data integrity
+
+## 🔄 Update Protocol
+
+This document should be updated whenever:
+- New features are implemented
+- Architecture changes are made
+- Dependencies are added or updated
+- Database schema modifications occur
+- Major configuration changes happen
+
+**Responsibility**: Both Claude Code instances and Cursor development should reference and update this document to maintain accurate feature tracking and development coordination.

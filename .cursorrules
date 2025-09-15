@@ -1,0 +1,38 @@
+# Cursor Rules for Video Teacher Project
+
+## Development Tools
+- Use Desktop Commander MCP for terminal operations and file management
+- Use Playwright MCP for automated testing and browser automation
+- Prefer MCP tools over direct terminal commands when available
+
+## Code Style
+- Use TypeScript for all new files
+- Follow Next.js 15 App Router patterns
+- Use ShadCN UI components for consistent design
+- Implement proper error handling with custom error classes
+
+## Testing
+- Write E2E tests with Playwright for critical user flows
+- Use Vitest for unit tests
+- Test responsive design on mobile and desktop
+- Include accessibility tests
+- Prioritize Chrome browser for testing and development
+- Test Chrome compatibility first, then other browsers
+
+## Build & Deployment
+- Optimize for Vercel deployment
+- Use environment variables for configuration
+- Implement proper error boundaries
+- Follow Vercel best practices
+
+## UI/UX
+- Use gradient backgrounds and glass morphism effects
+- Implement smooth animations and transitions
+- Ensure mobile-first responsive design
+- Follow modern design principles
+
+## Performance
+- Optimize images and assets
+- Use Next.js Image component
+- Implement proper caching strategies
+- Monitor Core Web Vitals

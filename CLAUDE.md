@@ -2,6 +2,17 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## 📋 Feature Documentation Reference
+
+**CRITICAL**: Always reference `.claude/command/doc-features` for comprehensive feature specifications, current implementation status, and development roadmap. This file contains the definitive source of truth for:
+- Complete feature specifications and technical architecture
+- Current implementation status and progress tracking
+- Planned features and development roadmap
+- Database schema details and relationships
+- Technology stack and infrastructure decisions
+
+Update `.claude/command/doc-features` whenever implementing new features, modifying architecture, or changing the tech stack.
+
 ## Project Overview
 
 Video Teacher - A YouTube educational content analyzer that extracts transcripts, generates teaching materials, and creates structured learning decks from YouTube videos. Built with Next.js 15, TypeScript, Drizzle ORM, and PostgreSQL.
