@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Ensure correct monorepo root selection
+  outputFileTracingRoot: process.cwd(),
+
   // Enable experimental features for better performance
   experimental: {
     // Enable server components logging in development

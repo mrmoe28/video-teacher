@@ -64,7 +64,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-[radial-gradient(60%_60%_at_50%_0%,rgba(168,85,247,0.15),rgba(236,72,153,0)_60%),radial-gradient(40%_40%_at_100%_0%,rgba(6,182,212,0.12),rgba(6,182,212,0)_60%)]`}
       >
