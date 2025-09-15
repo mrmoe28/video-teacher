@@ -5,50 +5,51 @@ import { Play, Star, Users, Zap, Shield, Brain, ArrowRight, CheckCircle } from "
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen">
       {/* Navigation */}
-      <nav className="border-b border-white/10 bg-black/20 backdrop-blur-sm">
+      <nav className="sticky top-0 z-40 glass-strong">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-              <Brain className="w-5 h-5 text-white" />
+          <div className="flex items-center gap-2">
+            <div className="w-9 h-9 rounded-xl bg-[conic-gradient(from_180deg_at_50%_50%,theme(colors.violet.500),theme(colors.pink.500),theme(colors.cyan.500),theme(colors.violet.500))] p-[1px]">
+              <div className="w-full h-full rounded-[11px] bg-black/70 grid place-items-center">
+                <Brain className="w-5 h-5 text-white" />
+              </div>
             </div>
             <span className="text-xl font-bold text-white">VideoTeacher</span>
+            <Badge className="ml-2 hidden sm:inline-flex border-white/10 bg-white/10 text-white">v2</Badge>
           </div>
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center gap-8">
             <a href="#features" className="text-gray-300 hover:text-white transition-colors">Features</a>
             <a href="#pricing" className="text-gray-300 hover:text-white transition-colors">Pricing</a>
             <a href="#about" className="text-gray-300 hover:text-white transition-colors">About</a>
           </div>
-          <Button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white border-0">
+          <Button className="rounded-full px-5 bg-gradient-to-r from-violet-500 to-pink-500 hover:from-violet-600 hover:to-pink-600 text-white border-0">
             Get Started
           </Button>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="container mx-auto px-4 py-20 text-center">
-        <div className="max-w-4xl mx-auto">
-          <Badge variant="secondary" className="mb-6 bg-purple-500/20 text-purple-300 border-purple-500/30">
+      <section className="relative container mx-auto px-4 py-20 text-center">
+        <div className="pointer-events-none absolute inset-x-0 -top-10 mx-auto h-40 max-w-4xl bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-3xl" />
+        <div className="max-w-5xl mx-auto">
+          <Badge variant="secondary" className="mb-6 border-white/10 bg-white/10 text-white">
             🚀 AI-Powered Learning Platform
           </Badge>
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-purple-200 to-pink-200">
-            Transform Any Video Into
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
+            <span className="gradient-text">Transform Any Video</span>
             <br />
-            <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-              Interactive Learning
-            </span>
+            Into Interactive Learning
           </h1>
-          <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Turn YouTube videos into comprehensive study materials with AI-powered analysis, 
-            transcripts, flashcards, and personalized learning paths.
+          <p className="text-lg md:text-xl text-gray-300 mb-10 max-w-3xl mx-auto leading-relaxed">
+            Turn YouTube videos into comprehensive study materials with AI-powered analysis, transcripts, flashcards, and personalized learning paths.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button size="lg" className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white text-lg px-8 py-6 rounded-full">
+            <Button size="lg" className="rounded-full text-base h-12 px-8 bg-gradient-to-r from-violet-500 to-pink-500 hover:from-violet-600 hover:to-pink-600 text-white">
               Start Learning Now
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
-            <Button variant="outline" size="lg" className="border-white/20 text-white hover:bg-white/10 text-lg px-8 py-6 rounded-full">
+            <Button variant="outline" size="lg" className="rounded-full text-base h-12 px-8 border-white/20 text-white hover:bg-white/10">
               <Play className="mr-2 w-5 h-5" />
               Watch Demo
             </Button>
@@ -61,7 +62,7 @@ export default function Home() {
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
             Powerful Features for
-            <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"> Modern Learning</span>
+            <span className="gradient-text"> Modern Learning</span>
           </h2>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
             Everything you need to transform videos into engaging, interactive learning experiences.
@@ -69,9 +70,9 @@ export default function Home() {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <Card className="bg-white/5 border-white/10 backdrop-blur-sm hover:bg-white/10 transition-all duration-300">
+          <Card className="glass-effect hover-lift h-full">
             <CardHeader>
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center mb-4">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center mb-4">
                 <Brain className="w-6 h-6 text-white" />
               </div>
               <CardTitle className="text-white text-xl">AI Analysis</CardTitle>
@@ -81,9 +82,9 @@ export default function Home() {
             </CardHeader>
           </Card>
 
-          <Card className="bg-white/5 border-white/10 backdrop-blur-sm hover:bg-white/10 transition-all duration-300">
+          <Card className="glass-effect hover-lift h-full">
             <CardHeader>
-              <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center mb-4">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center mb-4">
                 <Zap className="w-6 h-6 text-white" />
               </div>
               <CardTitle className="text-white text-xl">Smart Transcripts</CardTitle>
@@ -93,9 +94,9 @@ export default function Home() {
             </CardHeader>
           </Card>
 
-          <Card className="bg-white/5 border-white/10 backdrop-blur-sm hover:bg-white/10 transition-all duration-300">
+          <Card className="glass-effect hover-lift h-full">
             <CardHeader>
-              <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mb-4">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center mb-4">
                 <Users className="w-6 h-6 text-white" />
               </div>
               <CardTitle className="text-white text-xl">Study Groups</CardTitle>
@@ -105,9 +106,9 @@ export default function Home() {
             </CardHeader>
           </Card>
 
-          <Card className="bg-white/5 border-white/10 backdrop-blur-sm hover:bg-white/10 transition-all duration-300">
+          <Card className="glass-effect hover-lift h-full">
             <CardHeader>
-              <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-lg flex items-center justify-center mb-4">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center mb-4">
                 <Shield className="w-6 h-6 text-white" />
               </div>
               <CardTitle className="text-white text-xl">Progress Tracking</CardTitle>
@@ -117,9 +118,9 @@ export default function Home() {
             </CardHeader>
           </Card>
 
-          <Card className="bg-white/5 border-white/10 backdrop-blur-sm hover:bg-white/10 transition-all duration-300">
+          <Card className="glass-effect hover-lift h-full">
             <CardHeader>
-              <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center mb-4">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center mb-4">
                 <Star className="w-6 h-6 text-white" />
               </div>
               <CardTitle className="text-white text-xl">Flashcards</CardTitle>
@@ -129,9 +130,9 @@ export default function Home() {
             </CardHeader>
           </Card>
 
-          <Card className="bg-white/5 border-white/10 backdrop-blur-sm hover:bg-white/10 transition-all duration-300">
+          <Card className="glass-effect hover-lift h-full">
             <CardHeader>
-              <div className="w-12 h-12 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-lg flex items-center justify-center mb-4">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-500 flex items-center justify-center mb-4">
                 <CheckCircle className="w-6 h-6 text-white" />
               </div>
               <CardTitle className="text-white text-xl">Quizzes & Tests</CardTitle>
@@ -145,20 +146,20 @@ export default function Home() {
 
       {/* CTA Section */}
       <section className="container mx-auto px-4 py-20">
-        <Card className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 border-purple-500/30 backdrop-blur-sm">
+        <Card className="glass-strong">
           <CardContent className="text-center py-16">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
               Ready to Transform Your Learning?
             </h2>
             <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-              Join thousands of learners who are already using VideoTeacher to make their video learning more effective and engaging.
+              Join thousands of learners already using VideoTeacher to study smarter.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white text-lg px-8 py-6 rounded-full">
+              <Button size="lg" className="rounded-full text-base h-12 px-8 bg-gradient-to-r from-violet-500 to-pink-500 hover:from-violet-600 hover:to-pink-600 text-white">
                 Start Free Trial
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
-              <Button variant="outline" size="lg" className="border-white/20 text-white hover:bg-white/10 text-lg px-8 py-6 rounded-full">
+              <Button variant="outline" size="lg" className="rounded-full text-base h-12 px-8 border-white/20 text-white hover:bg-white/10">
                 Learn More
               </Button>
             </div>
@@ -167,12 +168,12 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/10 bg-black/20 backdrop-blur-sm">
+      <footer className="glass-effect border-t">
         <div className="container mx-auto px-4 py-12">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 grid place-items-center">
                   <Brain className="w-5 h-5 text-white" />
                 </div>
                 <span className="text-xl font-bold text-white">VideoTeacher</span>

@@ -66,9 +66,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-[radial-gradient(60%_60%_at_50%_0%,rgba(168,85,247,0.15),rgba(236,72,153,0)_60%),radial-gradient(40%_40%_at_100%_0%,rgba(6,182,212,0.12),rgba(6,182,212,0)_60%)]`}
       >
-        {children}
+        <div className="relative min-h-screen">
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom_right,rgba(255,255,255,0.04),transparent)]" />
+          <div className="pointer-events-none absolute -top-40 right-0 h-[480px] w-[480px] rounded-full bg-gradient-to-tr from-purple-500/20 via-pink-500/10 to-cyan-400/20 blur-3xl" />
+          <div className="mx-auto container px-4 py-6">
+            <div className="rounded-xl glass-strong">
+              {children}
+            </div>
+          </div>
+        </div>
       </body>
     </html>
   );
