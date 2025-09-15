@@ -4,9 +4,17 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "type-check": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "postbuild": "next-sitemap"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.1",
@@ -18,6 +26,7 @@
     "express": "^5.1.0",
     "nanoid": "^5.1.5",
     "next": "15.5.3",
+    "next-sitemap": "^4.2.3",
     "openai": "^5.20.2",
     "p-limit": "^7.1.1",
     "react": "19.1.0",
@@ -25,7 +34,7 @@
     "serverless-http": "^4.0.0",
     "youtube-transcript": "^1.2.1",
     "ytdl-core": "^4.11.5",
-    "zod": "^4.1.8"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
