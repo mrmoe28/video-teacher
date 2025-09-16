@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Play, Star, Users, Zap, Shield, Brain, ArrowRight, CheckCircle } from "lucide-react";
 import Link from "next/link";
+import { QuickLessonForm } from "@/components/quick-lesson-form";
 
 export const dynamic = "force-dynamic";
 
@@ -49,7 +50,7 @@ export default function Home() {
           <p className="text-lg md:text-xl text-gray-300 mb-10 max-w-3xl mx-auto leading-relaxed">
             Turn YouTube videos into comprehensive study materials with AI-powered analysis, transcripts, flashcards, and personalized learning paths.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
             <Link href="/upload">
               <Button size="lg" className="rounded-full text-base h-12 px-8 bg-gradient-to-r from-violet-500 to-pink-500 hover:from-violet-600 hover:to-pink-600 text-white focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-slate-900">
                 Start Learning Now
@@ -61,6 +62,9 @@ export default function Home() {
               Watch Demo
             </Button>
           </div>
+          
+          {/* Quick Lesson Form */}
+          <QuickLessonForm variant="compact" className="max-w-2xl mx-auto" />
         </div>
       </section>
 
