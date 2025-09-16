@@ -25,6 +25,13 @@ CLERK_SECRET_KEY="sk_test_your_secret_key_here"
 - Check for placeholder values and show fallback UI instead of failing build
 - Ensure proper key format: `pk_test_` for test keys, `pk_live_` for production
 
+## Vercel Middleware Invocation Failed Error
+- Symptom: 500 Internal Server Error with `MIDDLEWARE_INVOCATION_FAILED` on Vercel
+- Fix: Add environment variable checks in middleware.ts to prevent Clerk initialization without proper keys
+- Use conditional middleware that skips Clerk when environment variables are missing
+- Add proper error handling and fallback behavior
+- Reference: https://clerk.com/docs/nextjs/middleware
+
 ## Tailwind v4 migration: '@tailwind base/components' not available
 - Symptom: Lint errors like "'@tailwind base' is no longer available in v4".
 - Fix: Replace directives in `app/globals.css` with:
