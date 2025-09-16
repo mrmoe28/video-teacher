@@ -1,6 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
+// Helper function to parse ISO 8601 duration to seconds
+function parseDuration(duration: string): number {
+  const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+  if (!match) return 0;
+  
+  const hours = parseInt(match[1] || '0');
+  const minutes = parseInt(match[2] || '0');
+  const seconds = parseInt(match[3] || '0');
+  
+  return hours * 3600 + minutes * 60 + seconds;
+}
+
 // Input validation schemas
 const createProgressSchema = z.object({
   videoId: z.string().uuid(),
@@ -122,32 +134,57 @@ export async function GET(request: NextRequest) {
     // For now, return mock data for development
     console.log('Skipping database query due to connection issues');
     
-    // Check if this is a mock video ID
+    // Check if this is a mock video ID or extract YouTube ID from mock ID
+    let youtubeId = validatedInput.videoId;
+    let isMockVideo = false;
+    
     if (validatedInput.videoId.startsWith('mock-')) {
-      const mockVideoData = {
+      isMockVideo = true;
+      // Extract YouTube ID from mock ID format: mock-{youtubeId}-{timestamp}
+      const mockParts = validatedInput.videoId.split('-');
+      if (mockParts.length >= 2) {
+        youtubeId = mockParts[1];
+      }
+    }
+
+    // Try to fetch video metadata from YouTube API
+    let videoData = null;
+    try {
+      const apiKey = process.env.YOUTUBE_API_KEY;
+      if (apiKey) {
+        const response = await fetch(
+          `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${youtubeId}&key=${apiKey}`
+        );
+        
+        if (response.ok) {
+          const data = await response.json();
+          if (data.items && data.items.length > 0) {
+            const videoInfo = data.items[0];
+            videoData = {
+              id: validatedInput.videoId,
+              title: videoInfo.snippet.title,
+              channel: videoInfo.snippet.channelTitle,
+              duration: parseDuration(videoInfo.contentDetails.duration),
+              thumbnailUrl: videoInfo.snippet.thumbnails?.default?.url,
+              url: `https://www.youtube.com/watch?v=${youtubeId}`
+            };
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching YouTube metadata:', error);
+    }
+
+    // If we couldn't fetch real data, use mock data
+    if (!videoData) {
+      videoData = {
         id: validatedInput.videoId,
-        title: 'Sample Video Title',
-        channel: 'Sample Channel',
-        durationSeconds: 213,
-        thumbnailUrl: 'https://via.placeholder.com/120x90',
-        url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+        title: isMockVideo ? 'Sample Video Title' : 'Video Not Found',
+        channel: isMockVideo ? 'Sample Channel' : 'Unknown',
+        duration: isMockVideo ? 213 : 0,
+        thumbnailUrl: isMockVideo ? 'https://via.placeholder.com/120x90' : undefined,
+        url: `https://www.youtube.com/watch?v=${youtubeId}`
       };
-
-      const response: VideoProgressResponse = {
-        video: {
-          id: mockVideoData.id,
-          title: mockVideoData.title,
-          channel: mockVideoData.channel,
-          duration: mockVideoData.durationSeconds,
-          thumbnailUrl: mockVideoData.thumbnailUrl,
-          url: mockVideoData.url
-        },
-        hasTranscript: true, // Mock as having transcript
-        hasDeck: false,
-        progress: undefined
-      };
-
-      return NextResponse.json(response);
     }
 
     // Get progress from store
@@ -165,17 +202,10 @@ export async function GET(request: NextRequest) {
       };
     }
 
-    // For now, return a basic response for non-mock videos
-    // TODO: Fetch actual video data from database when connection is fixed
+    // Return the video data with progress
     const response: VideoProgressResponse = {
-      video: {
-        id: validatedInput.videoId,
-        title: 'Video Not Found',
-        channel: 'Unknown',
-        duration: 0,
-        url: `https://www.youtube.com/watch?v=${validatedInput.videoId}`
-      },
-      hasTranscript: false,
+      video: videoData,
+      hasTranscript: isMockVideo, // Mock videos have transcripts, real videos need to be checked
       hasDeck: false,
       progress
     };

@@ -93,9 +93,9 @@ export default function UploadPage() {
     }
   }, [router]);
 
-  // Handle videoId from URL parameter
+  // Handle videoId from URL parameter (support both videoId and videoid)
   useEffect(() => {
-    const videoId = searchParams.get('videoId');
+    const videoId = searchParams.get('videoId') || searchParams.get('videoid');
     if (videoId) {
       // Construct the YouTube URL from the video ID
       const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;

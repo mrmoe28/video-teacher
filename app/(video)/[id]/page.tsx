@@ -56,6 +56,22 @@ export default function VideoDetailPage(props: unknown) {
         if (progressResponse.ok) {
           const data = await progressResponse.json();
           setVideoData(data);
+        } else {
+          // If progress API fails, try to create basic video data from YouTube ID
+          const youtubeId = id.startsWith('mock-') ? id.split('-')[1] : id;
+          if (youtubeId && youtubeId.length === 11) { // YouTube IDs are 11 characters
+            setVideoData({
+              video: {
+                id: id,
+                title: 'Loading...',
+                channel: 'Loading...',
+                duration: 0,
+                url: `https://www.youtube.com/watch?v=${youtubeId}`
+              },
+              hasTranscript: false,
+              hasDeck: false
+            });
+          }
         }
 
         // Load analysis data
