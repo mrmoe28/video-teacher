@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Brain, FileText, Sparkles, AlertCircle } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
 import { ErrorMessage } from "@/components/error-message";
 import { LoadingSpinner } from "@/components/loading-spinner";
 import { YouTubePlayer } from "@/components/youtube-player";
@@ -40,8 +40,9 @@ type AnalysisData = {
   }>;
 };
 
-export default function VideoDetailPage(props: unknown) {
-  const id = (props as { params?: { id?: string } })?.params?.id ?? "unknown";
+export default function VideoDetailPage(props: { params: Promise<{ id: string }> }) {
+  const params = use(props.params);
+  const id = params.id;
   const [videoData, setVideoData] = useState<VideoData | null>(null);
   const [analysis, setAnalysis] = useState<AnalysisData | null>(null);
   const [loading, setLoading] = useState(true);
