@@ -1,0 +1,369 @@
+# Video Teacher Feature Documentation
+
+## 🎯 Project Overview
+**Video Teacher** - An AI-powered YouTube educational content analyzer that transforms video content into structured learning materials. The platform extracts transcripts, generates comprehensive teaching materials, and creates interactive learning decks optimized for educational purposes.
+
+## 🏗️ Technical Architecture
+
+### Technology Stack
+- **Frontend**: Next.js 15 (App Router), TypeScript, Tailwind CSS 4
+- **Backend**: Next.js API Routes, Vercel Functions
+- **Database**: PostgreSQL (Neon Serverless) with connection pooling
+- **ORM**: Drizzle ORM with Zod validation
+- **AI/ML**: OpenAI API for content analysis
+- **Video Processing**: youtube-transcript, ytdl-core
+- **Authentication**: Clerk (external service)
+- **Build System**: Turbopack for fast development and production builds
+
+### Infrastructure
+- **Hosting**: Vercel (optimized with 1024MB memory, 60s timeout for API routes)
+- **Database**: Neon PostgreSQL with connection pooling
+- **Runtime**: Node.js 20.x
+
+## 📊 Database Schema
+
+### Entity Relationship Diagram
+```
+Videos (root entity)
+├── Transcripts (1:many, cascade delete)
+├── Decks (1:many, cascade delete)
+│   └── Slides (1:many, cascade delete)
+│       ├── Steps (1:many, cascade delete)
+│       └── Quizzes (1:many, cascade delete)
+└── Jobs (processing pipeline, nullable reference)
+```
+
+### Tables & Relationships
+
+#### 1. **Videos** - YouTube content metadata
+- `id` (UUID, primary key)
+- `url` (text, required)
+- `youtubeId` (text, unique constraint)
+- `title` (text)
+- `channel` (text)
+- `durationSeconds` (integer)
+- `thumbnailUrl` (text)
+- `createdAt` (timestamp)
+- **Indexes**: url, channel, createdAt
+
+#### 2. **Transcripts** - Video captions/transcriptions
+- `id` (UUID, primary key)
+- `videoId` (UUID, foreign key → videos.id, cascade delete)
+- `source` (enum: 'captions' | 'whisper')
+- `language` (text, default: 'en')
+- `text` (JSONB: `Array<{start: number, end: number, text: string}>`)
+- `createdAt` (timestamp)
+- **Indexes**: videoId, source
+
+#### 3. **Decks** - Teaching presentations
+- `id` (UUID, primary key)
+- `videoId` (UUID, foreign key → videos.id, cascade delete)
+- `title` (text, required)
+- `summary` (text)
+- `analysis` (JSONB):
+  - `keyInsights: string[]`
+  - `pitfalls: string[]`
+  - `glossary: Array<{term: string, definition: string}>`
+  - `faqs: Array<{q: string, a: string}>`
+- `createdAt` (timestamp)
+- **Indexes**: videoId
+
+#### 4. **Slides** - Individual presentation slides
+- `id` (UUID, primary key)
+- `deckId` (UUID, foreign key → decks.id, cascade delete)
+- `idx` (integer, ordering)
+- `title` (text, required)
+- `bullets` (JSONB: `string[]`)
+- `startSeconds` (integer, video sync)
+- `endSeconds` (integer, video sync)
+- **Indexes**: deckId, composite(deckId, idx)
+
+#### 5. **Steps** - Interactive checklist items
+- `id` (UUID, primary key)
+- `slideId` (UUID, foreign key → slides.id, cascade delete)
+- `idx` (integer, ordering)
+- `text` (text, required)
+- `doneDefault` (boolean, default: false)
+- `timestampSeconds` (integer, video sync)
+
+#### 6. **Quizzes** - Multiple choice questions
+- `id` (UUID, primary key)
+- `slideId` (UUID, foreign key → slides.id, cascade delete)
+- `question` (text, required)
+- `choices` (JSONB: `string[]`)
+- `answerIndex` (integer, required)
+- `explanation` (text)
+
+#### 7. **Jobs** - Processing pipeline tracker
+- `id` (UUID, primary key)
+- `videoId` (UUID, foreign key → videos.id, nullable)
+- `status` (enum: 'queued' | 'crawling' | 'transcribing' | 'analyzing' | 'ready' | 'error')
+- `progressInt` (integer, 0-100)
+- `errorText` (text)
+- `createdAt` (timestamp)
+- `updatedAt` (timestamp)
+- **Indexes**: status, videoId, createdAt
+
+## 🚀 Core Features
+
+### ✅ Implemented Features
+
+#### 1. YouTube Video Processing
+- **URL Input**: Accept YouTube video URLs
+- **Metadata Extraction**: Title, channel, duration, thumbnail via ytdl-core
+- **Unique Constraint**: Prevent duplicate video processing
+
+#### 2. Transcript Extraction
+- **Primary Method**: YouTube auto-captions via youtube-transcript
+- **Fallback Method**: Whisper AI transcription (planned)
+- **Timestamped Text**: Preserve timing for video synchronization
+- **Language Support**: Default English with extensibility
+
+#### 3. AI-Powered Content Analysis
+- **Deck Generation**: Create structured learning presentations
+- **Key Insights**: Extract main learning points
+- **Common Pitfalls**: Identify potential misunderstandings
+- **Glossary Creation**: Define technical terms
+- **FAQ Generation**: Anticipate learner questions
+
+#### 4. Interactive Learning Materials
+- **Slide Organization**: Sequential, time-synced presentation
+- **Bullet Points**: Concise learning objectives
+- **Action Steps**: Checklist items for hands-on practice
+- **Knowledge Checks**: Multiple choice quizzes with explanations
+
+#### 5. Processing Pipeline
+- **Job Queue System**: Track processing status
+- **Progress Monitoring**: Real-time progress updates
+- **Error Handling**: Capture and display processing errors
+- **Status Workflow**: queued → crawling → transcribing → analyzing → ready
+
+### 🔄 Current Implementation Status
+
+#### ✅ Complete
+- Database schema with all tables and relationships
+- Drizzle ORM configuration with Zod validation
+- PostgreSQL connection with Neon
+- Type-safe database queries
+- Migration system setup
+
+#### 🚧 In Progress
+- API route implementations
+- Frontend components for video input
+- Deck viewer interface
+- Processing pipeline automation
+
+#### 📋 Pending
+- Whisper transcription fallback
+- User authentication integration (Clerk)
+- Real-time progress updates (WebSocket/SSE)
+- Export functionality (PDF, Markdown)
+- Collaborative features
+
+## 🗺️ Development Roadmap
+
+### Phase 1: Core MVP (Current)
+- [x] Database schema design
+- [x] ORM setup with type safety
+- [ ] Video metadata extraction API
+- [ ] Transcript extraction pipeline
+- [ ] Basic deck generation with OpenAI
+- [ ] Simple viewer interface
+
+### Phase 2: Enhanced Learning
+- [ ] Interactive quiz system
+- [ ] Progress tracking per user
+- [ ] Bookmarking and notes
+- [ ] Video timestamp navigation
+- [ ] Export to Anki/Quizlet
+
+### Phase 3: Advanced Features
+- [ ] Multi-language support
+- [ ] Collaborative decks
+- [ ] Custom deck templates
+- [ ] AI-powered Q&A
+- [ ] Learning analytics dashboard
+- [ ] Spaced repetition system
+
+### Phase 4: Platform Expansion
+- [ ] Support for other video platforms (Vimeo, etc.)
+- [ ] PDF/Document processing
+- [ ] Live lecture capture
+- [ ] Mobile applications
+- [ ] Offline mode with sync
+
+## 🔧 API Endpoints
+
+### Planned Endpoints
+
+#### Video Processing
+- `POST /api/videos/process` - Submit YouTube URL for processing
+- `GET /api/videos/:id` - Get video metadata and status
+- `GET /api/videos/:id/transcript` - Retrieve transcript
+
+#### Deck Management
+- `GET /api/decks/:id` - Get deck with slides
+- `POST /api/decks/generate` - Generate deck from video
+- `PUT /api/decks/:id` - Update deck content
+
+#### Learning Progress
+- `POST /api/progress/steps` - Mark step complete
+- `POST /api/progress/quiz` - Submit quiz answer
+- `GET /api/progress/stats` - Get learning statistics
+
+#### Job Management
+- `GET /api/jobs/:id` - Get job status and progress
+- `GET /api/jobs/:id/stream` - SSE endpoint for real-time updates
+
+## 🔐 Security & Authentication
+
+### Current Design
+- **Authentication**: Clerk integration (external service)
+- **Authorization**: User-owned content with cascade delete
+- **API Security**: Vercel function authentication
+- **Database**: Connection pooling with secure credentials
+
+### Planned Enhancements
+- Rate limiting per user
+- Content sharing permissions
+- Team/organization support
+- API key management for external access
+
+## 🎨 User Interface Components
+
+### Planned Components
+
+#### Input & Discovery
+- YouTube URL input with validation
+- Recent videos gallery
+- Channel browser
+- Search functionality
+
+#### Content Viewer
+- Video player with controls
+- Synchronized slide viewer
+- Interactive transcript
+- Progress indicators
+
+#### Learning Tools
+- Step checklist manager
+- Quiz interface with feedback
+- Note-taking panel
+- Bookmark manager
+
+#### Dashboard
+- Processing queue status
+- Learning statistics
+- Deck library
+- Export options
+
+## 📈 Performance Optimizations
+
+### Implemented
+- Turbopack for faster builds
+- Database connection pooling
+- Indexed database queries
+- JSONB for structured data
+
+### Planned
+- CDN for video thumbnails
+- Transcript caching
+- Incremental static regeneration
+- Background job processing
+- WebWorker for heavy computations
+
+## 🧪 Testing Strategy
+
+### Unit Testing
+- Database schema validation
+- API endpoint logic
+- Utility functions
+- Component rendering
+
+### Integration Testing
+- YouTube API integration
+- OpenAI API calls
+- Database transactions
+- End-to-end workflows
+
+### Test Infrastructure
+- Vitest for unit tests
+- Playwright for E2E tests
+- Mock servers for external APIs
+- Test database with migrations
+
+## 📝 Development Notes
+
+### Key Decisions
+1. **Drizzle over Prisma**: Better TypeScript integration and performance
+2. **Neon PostgreSQL**: Serverless with connection pooling
+3. **Turbopack**: Faster development experience
+4. **JSONB storage**: Flexible schema for AI-generated content
+5. **Cascade deletes**: Maintain referential integrity automatically
+
+### Known Limitations
+- 60-second timeout for Vercel functions
+- YouTube API rate limits
+- OpenAI token costs for analysis
+- Storage costs for large transcripts
+
+### Future Considerations
+- Migration to dedicated infrastructure for heavy processing
+- Background job queue (BullMQ/Redis)
+- Video storage for offline access
+- Real-time collaboration features
+- Machine learning model fine-tuning
+
+## 🚨 Error Handling
+
+### Error Categories
+1. **External API Failures**: YouTube/OpenAI unavailable
+2. **Processing Errors**: Transcript extraction failures
+3. **Database Errors**: Connection/constraint violations
+4. **Validation Errors**: Invalid input data
+5. **Authorization Errors**: Access control violations
+
+### Recovery Strategies
+- Automatic retry with exponential backoff
+- Fallback transcript methods
+- User notification system
+- Error logging and monitoring
+- Graceful degradation
+
+## 📚 Dependencies
+
+### Core Dependencies
+- `next`: 15.1.3 - Framework
+- `drizzle-orm`: 0.38.3 - Database ORM
+- `@neondatabase/serverless`: 0.9.5 - Database driver
+- `openai`: 4.76.0 - AI analysis
+- `youtube-transcript`: 1.2.1 - Caption extraction
+- `ytdl-core`: 4.11.5 - Video metadata
+
+### Development Dependencies
+- `drizzle-kit`: 0.30.2 - Migration tools
+- `typescript`: 5.x - Type safety
+- `tailwindcss`: 4.x - Styling
+- `vitest`: Testing framework
+
+## 🔄 Migration Guide
+
+### Schema Changes
+1. Edit `lib/drizzle/schema.ts`
+2. Run `npx drizzle-kit generate`
+3. Review migration in `lib/drizzle/migrations`
+4. Run `npx drizzle-kit migrate`
+5. Update this documentation
+
+### Deployment Checklist
+- [ ] Environment variables configured
+- [ ] Database migrations applied
+- [ ] Vercel functions configured
+- [ ] API rate limits set
+- [ ] Monitoring enabled
+
+---
+
+**Last Updated**: Current
+**Status**: Active Development
+**Version**: 0.1.0 (Pre-MVP)
