@@ -10,8 +10,6 @@ import { useRouter } from "next/navigation";
 import { ErrorMessage } from "@/components/error-message";
 import { LoadingSpinner } from "@/components/loading-spinner";
 
-export const dynamic = "force-dynamic";
-
 type JobStatus = 'idle' | 'crawling' | 'transcribing' | 'analyzing' | 'ready' | 'error';
 
 export default function UploadPage() {
