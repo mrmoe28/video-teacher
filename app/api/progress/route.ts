@@ -150,18 +150,12 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(response);
     }
 
-    // For non-mock IDs, return error
-    return NextResponse.json(
-      { error: 'Video not found' },
-      { status: 404 }
-    );
-
-    // Get progress
+    // Get progress from store
     const progressKey = `${validatedInput.videoId}-${validatedInput.userId || 'anonymous'}`;
     const progressData = progressStore.get(progressKey);
 
     let progress: ProgressResponse | undefined;
-    if (progressData && progressData.videoId && progressData.userId) {
+    if (progressData) {
       progress = {
         videoId: progressData.videoId,
         userId: progressData.userId,
@@ -171,17 +165,18 @@ export async function GET(request: NextRequest) {
       };
     }
 
+    // For now, return a basic response for non-mock videos
+    // TODO: Fetch actual video data from database when connection is fixed
     const response: VideoProgressResponse = {
       video: {
-        id: videoData.id,
-        title: videoData.title || 'Unknown Title',
-        channel: videoData.channel || 'Unknown Channel',
-        duration: videoData.durationSeconds || 0,
-        thumbnailUrl: videoData.thumbnailUrl || undefined,
-        url: videoData.url
+        id: validatedInput.videoId,
+        title: 'Video Not Found',
+        channel: 'Unknown',
+        duration: 0,
+        url: `https://www.youtube.com/watch?v=${validatedInput.videoId}`
       },
-      hasTranscript: transcript.length > 0,
-      hasDeck: deck.length > 0,
+      hasTranscript: false,
+      hasDeck: false,
       progress
     };
 

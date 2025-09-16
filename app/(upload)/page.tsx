@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Upload, Link2, Loader2, CheckCircle, AlertCircle } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ErrorMessage } from "@/components/error-message";
 import { LoadingSpinner } from "@/components/loading-spinner";
@@ -29,19 +29,7 @@ export default function UploadPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Handle videoId from URL parameter
-  useEffect(() => {
-    const videoId = searchParams.get('videoId');
-    if (videoId) {
-      // Construct the YouTube URL from the video ID
-      const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
-      setUrl(youtubeUrl);
-      // Automatically start processing
-      handleAnalyzeWithUrl(youtubeUrl);
-    }
-  }, [searchParams]);
-
-  const handleAnalyzeWithUrl = async (urlToProcess: string) => {
+  const handleAnalyzeWithUrl = useCallback(async (urlToProcess: string) => {
     setIsLoading(true);
     setError(null);
     setJobStatus('crawling');
@@ -103,7 +91,19 @@ export default function UploadPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [router]);
+
+  // Handle videoId from URL parameter
+  useEffect(() => {
+    const videoId = searchParams.get('videoId');
+    if (videoId) {
+      // Construct the YouTube URL from the video ID
+      const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
+      setUrl(youtubeUrl);
+      // Automatically start processing
+      handleAnalyzeWithUrl(youtubeUrl);
+    }
+  }, [searchParams, handleAnalyzeWithUrl]);
 
   const handleAnalyze = async () => {
     if (!url.trim()) {
