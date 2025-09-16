@@ -15,7 +15,7 @@ function parseDuration(duration: string): number {
 
 // Input validation schemas
 const createProgressSchema = z.object({
-  videoId: z.string().uuid(),
+  videoId: z.string().min(1), // Allow any string, not just UUID
   userId: z.string().uuid().optional(), // For future auth integration
   percent: z.number().min(0).max(100),
   lastPosition: z.number().min(0).optional() // Video position in seconds
