@@ -44,6 +44,7 @@ export type VideoProgressResponse = {
     duration: number;
     thumbnailUrl?: string;
     url: string;
+    youtubeId: string;
   };
   hasTranscript: boolean;
   hasDeck: boolean;
@@ -168,7 +169,8 @@ export async function GET(request: NextRequest) {
         channel: videoInfo.snippet.channelTitle,
         duration: parseDuration(videoInfo.contentDetails.duration),
         thumbnailUrl: videoInfo.snippet.thumbnails?.default?.url,
-        url: `https://www.youtube.com/watch?v=${youtubeId}`
+        url: `https://www.youtube.com/watch?v=${youtubeId}`,
+        youtubeId: youtubeId
       };
     } catch (error) {
       console.error('Error fetching YouTube metadata:', error);

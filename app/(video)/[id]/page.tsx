@@ -3,11 +3,11 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Brain, FileText, Play, Sparkles, AlertCircle } from "lucide-react";
+import { Brain, FileText, Sparkles, AlertCircle } from "lucide-react";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { ErrorMessage } from "@/components/error-message";
 import { LoadingSpinner } from "@/components/loading-spinner";
+import { YouTubePlayer } from "@/components/youtube-player";
 
 type VideoData = {
   video: {
@@ -17,6 +17,7 @@ type VideoData = {
     duration: number;
     thumbnailUrl?: string;
     url: string;
+    youtubeId?: string;
   };
   hasTranscript: boolean;
   hasDeck: boolean;
@@ -111,19 +112,20 @@ export default function VideoDetailPage(props: unknown) {
     <div className="container mx-auto px-4 py-10">
       <div className="grid lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
-          <div className="aspect-video rounded-xl overflow-hidden glass-effect grid place-items-center">
-            <Play className="w-10 h-10 text-white" />
-            {videoData?.video.thumbnailUrl && (
-              <Image 
-                src={videoData.video.thumbnailUrl} 
-                alt={videoData.video.title}
-                fill
-                className="object-cover"
-                priority
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              />
-            )}
-          </div>
+          {videoData?.video.youtubeId || videoData?.video.url ? (
+            <YouTubePlayer
+              videoId={videoData.video.youtubeId || videoData.video.url || ''}
+              className="aspect-video"
+              startTime={videoData.progress?.lastPosition || 0}
+            />
+          ) : (
+            <div className="aspect-video rounded-xl overflow-hidden glass-effect grid place-items-center">
+              <div className="text-center">
+                <AlertCircle className="w-10 h-10 text-yellow-400 mx-auto mb-2" />
+                <p className="text-gray-300">No video available</p>
+              </div>
+            </div>
+          )}
 
           <Card className="glass-effect">
             <CardHeader>
