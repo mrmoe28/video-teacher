@@ -57,15 +57,10 @@ export async function POST(request: NextRequest) {
 
     // Fetch the actual transcript from YouTube
     let transcript = '';
-    let transcriptSegments: Array<{ start: number; text: string }> = [];
     
     try {
       const transcriptData = await YoutubeTranscript.fetchTranscript(youtubeId);
-      transcriptSegments = transcriptData.map((item: any) => ({
-        start: item.offset / 1000, // Convert milliseconds to seconds
-        text: item.text
-      }));
-      transcript = transcriptData.map((item: any) => item.text).join(' ');
+      transcript = transcriptData.map((item: { text: string }) => item.text).join(' ');
     } catch (transcriptError) {
       console.error('Failed to fetch transcript:', transcriptError);
       return NextResponse.json(
