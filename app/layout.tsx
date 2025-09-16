@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ErrorBoundary } from "@/components/error-boundary";
 import {
@@ -10,16 +9,6 @@ import {
   SignedOut,
   UserButton,
 } from "@clerk/nextjs";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: {
@@ -72,13 +61,43 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const clerkPublishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+  
+  if (!clerkPublishableKey || clerkPublishableKey.includes('your_publishable_key_here') || clerkPublishableKey.includes('placeholder')) {
+    return (
+      <html lang="en" className="dark">
+        <body className="antialiased min-h-screen bg-[radial-gradient(60%_60%_at_50%_0%,rgba(168,85,247,0.15),rgba(236,72,153,0)_60%),radial-gradient(40%_40%_at_100%_0%,rgba(6,182,212,0.12),rgba(6,182,212,0)_60%)] font-sans">
+          <div className="min-h-screen flex items-center justify-center">
+            <div className="text-center">
+              <h1 className="text-2xl font-bold text-white mb-4">Video Teacher</h1>
+              <p className="text-gray-300">Please configure Clerk authentication keys in your .env.local file</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    );
+  }
+
   return (
-    <ClerkProvider>
+    <ClerkProvider publishableKey={clerkPublishableKey}>
       <html lang="en" className="dark">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-[radial-gradient(60%_60%_at_50%_0%,rgba(168,85,247,0.15),rgba(236,72,153,0)_60%),radial-gradient(40%_40%_at_100%_0%,rgba(6,182,212,0.12),rgba(6,182,212,0)_60%)]`}
+          className="antialiased min-h-screen bg-[radial-gradient(60%_60%_at_50%_0%,rgba(168,85,247,0.15),rgba(236,72,153,0)_60%),radial-gradient(40%_40%_at_100%_0%,rgba(6,182,212,0.12),rgba(6,182,212,0)_60%)] font-sans"
         >
           <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-black focus:text-white focus:px-3 focus:py-2">Skip to content</a>
+          <header className="flex justify-end items-center p-4 gap-4 h-16">
+            <SignedOut>
+              <SignInButton />
+              <SignUpButton>
+                <button className="bg-[#6c47ff] text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer hover:bg-[#5a3cd1] transition-colors">
+                  Sign Up
+                </button>
+              </SignUpButton>
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+          </header>
           <div className="relative min-h-screen">
             <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom_right,rgba(255,255,255,0.04),transparent)]" />
             <div className="pointer-events-none absolute -top-40 right-0 h-[480px] w-[480px] rounded-full bg-gradient-to-tr from-purple-500/20 via-pink-500/10 to-cyan-400/20 blur-3xl" />
