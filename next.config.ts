@@ -24,7 +24,7 @@ const nextConfig: NextConfig = {
   compress: true,
   
   // Optimize for Vercel deployment
-  output: 'standalone',
+  // output: 'standalone', // Commented out for Vercel compatibility
   
   // Environment variables validation
   env: {
