@@ -1,0 +1,55 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - link "Skip to content" [ref=e2]:
+    - /url: "#main"
+  - main [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - img [ref=e10]
+          - generic [ref=e12]:
+            - generic [ref=e13]:
+              - heading "Video Overview" [level=3] [ref=e14]
+              - paragraph [ref=e15]: Loading...
+            - generic [ref=e17]:
+              - paragraph [ref=e18]:
+                - strong [ref=e19]: "Channel:"
+              - paragraph [ref=e20]:
+                - strong [ref=e21]: "Duration:"
+                - text: Unknown
+              - paragraph [ref=e22]:
+                - strong [ref=e23]: "Status:"
+                - text: Not transcribed
+        - generic [ref=e24]:
+          - generic [ref=e25]:
+            - generic [ref=e26]:
+              - heading "Transcript" [level=3] [ref=e27]:
+                - img [ref=e28]
+                - text: Transcript
+              - paragraph [ref=e31]: No transcript found
+            - paragraph [ref=e33]: Transcript not available for this video.
+          - generic [ref=e34]:
+            - generic [ref=e35]:
+              - heading "Study Materials" [level=3] [ref=e36]:
+                - img [ref=e37]
+                - text: Study Materials
+              - paragraph [ref=e40]: Generate flashcards and quizzes.
+            - generic [ref=e41]:
+              - button "Generate Deck" [ref=e42]
+              - button "Create Quiz" [ref=e43]
+      - generic [ref=e44]: More related videos coming soon.
+  - generic [ref=e49] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e50] [cursor=pointer]:
+      - img [ref=e51] [cursor=pointer]
+    - generic [ref=e56] [cursor=pointer]:
+      - button "Open issues overlay" [ref=e57] [cursor=pointer]:
+        - generic [ref=e58] [cursor=pointer]:
+          - generic [ref=e59] [cursor=pointer]: "0"
+          - generic [ref=e60] [cursor=pointer]: "1"
+        - generic [ref=e61] [cursor=pointer]: Issue
+      - button "Collapse issues badge" [ref=e62] [cursor=pointer]:
+        - img [ref=e63] [cursor=pointer]
+  - alert [ref=e65]
+```

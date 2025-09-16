@@ -22,7 +22,7 @@
     "postbuild": "next-sitemap"
   },
   "dependencies": {
-    "@auth/drizzle-adapter": "^1.10.0",
+    "@clerk/nextjs": "^6.32.0",
     "@isaacs/brace-expansion": "^5.0.0",
     "@neondatabase/serverless": "^1.0.1",
     "@radix-ui/react-accordion": "^1.2.12",
@@ -45,7 +45,6 @@
     "lucide-react": "^0.544.0",
     "nanoid": "^5.1.5",
     "next": "15.5.3",
-    "next-auth": "^5.0.0-beta.29",
     "next-sitemap": "^4.2.3",
     "openai": "^5.20.2",
     "p-limit": "^7.1.1",

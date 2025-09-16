@@ -98,51 +98,7 @@ export const quizzes = pgTable('quizzes', {
   explanation: text('explanation')
 });
 
-// ============== Auth.js Tables ==============
-// Users table for authentication
-export const users = pgTable('users', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  email: text('email').notNull().unique(),
-  emailVerified: timestamp('email_verified'),
-  name: text('name'),
-  image: text('image'),
-  createdAt: timestamp('created_at').defaultNow().notNull()
-});
-
-// Accounts table for OAuth providers
-export const accounts = pgTable('accounts', {
-  id: uuid('id').defaultRandom(),
-  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
-  type: text('type').notNull(),
-  provider: text('provider').notNull(),
-  providerAccountId: text('provider_account_id').notNull(),
-  refresh_token: text('refresh_token'),
-  access_token: text('access_token'),
-  expires_at: integer('expires_at'),
-  token_type: text('token_type'),
-  scope: text('scope'),
-  id_token: text('id_token'),
-  session_state: text('session_state')
-}, (account) => ({
-  compoundKey: primaryKey({ columns: [account.provider, account.providerAccountId] })
-}));
-
-// Sessions table for user sessions
-export const sessions = pgTable('sessions', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  sessionToken: text('session_token').notNull().unique(),
-  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
-  expires: timestamp('expires').notNull()
-});
-
-// Verification tokens for email verification
-export const verificationTokens = pgTable('verification_tokens', {
-  identifier: text('identifier').notNull(),
-  token: text('token').notNull(),
-  expires: timestamp('expires').notNull()
-}, (vt) => ({
-  compoundKey: primaryKey({ columns: [vt.identifier, vt.token] })
-}));
+// Note: Clerk handles user authentication and manages its own user tables
 
 // Create Zod schemas for validation
 export const insertVideoSchema = createInsertSchema(videos);

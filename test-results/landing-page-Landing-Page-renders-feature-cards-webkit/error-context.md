@@ -1,0 +1,233 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - link "Skip to content" [ref=e2]:
+    - /url: "#main"
+  - main [ref=e5]:
+    - generic [ref=e6]:
+      - navigation "Primary" [ref=e7]:
+        - generic [ref=e8]:
+          - generic [ref=e9]:
+            - img [ref=e12]
+            - generic [ref=e20]: VideoTeacher
+            - generic [ref=e21]: v2
+          - generic [ref=e22]:
+            - link "Features" [ref=e23]:
+              - /url: "#features"
+            - link "Pricing" [ref=e24]:
+              - /url: "#pricing"
+            - link "About" [ref=e25]:
+              - /url: "#about"
+          - link "Get Started" [ref=e26]:
+            - /url: /upload
+            - button "Get Started" [ref=e27]
+      - region "Transform Any Video Into Interactive Learning" [ref=e28]:
+        - generic [ref=e29]:
+          - generic [ref=e30]: 🚀 AI-Powered Learning Platform
+          - heading "Transform Any Video Into Interactive Learning" [level=1] [ref=e31]:
+            - generic [ref=e32]: Transform Any Video
+            - text: Into Interactive Learning
+          - paragraph [ref=e33]: Turn YouTube videos into comprehensive study materials with AI-powered analysis, transcripts, flashcards, and personalized learning paths.
+          - generic [ref=e34]:
+            - link "Start Learning Now" [ref=e35]:
+              - /url: /upload
+              - button "Start Learning Now" [ref=e36]:
+                - text: Start Learning Now
+                - img [ref=e37]
+            - button "Watch Demo" [ref=e39]:
+              - img [ref=e40]
+              - text: Watch Demo
+      - generic [ref=e42]:
+        - generic [ref=e43]:
+          - heading "Powerful Features for Modern Learning" [level=2] [ref=e44]:
+            - text: Powerful Features for
+            - generic [ref=e45]: Modern Learning
+          - paragraph [ref=e46]: Everything you need to transform videos into engaging, interactive learning experiences.
+        - generic [ref=e47]:
+          - generic [ref=e49]:
+            - img [ref=e51]
+            - heading "AI Analysis" [level=3] [ref=e59]
+            - paragraph [ref=e60]: Advanced AI analyzes video content to extract key concepts, insights, and learning objectives.
+          - generic [ref=e62]:
+            - img [ref=e64]
+            - heading "Smart Transcripts" [level=3] [ref=e66]
+            - paragraph [ref=e67]: Get accurate, timestamped transcripts with speaker identification and content categorization.
+          - generic [ref=e69]:
+            - img [ref=e71]
+            - heading "Study Groups" [level=3] [ref=e76]
+            - paragraph [ref=e77]: Collaborate with others, share insights, and learn together in interactive study sessions.
+          - generic [ref=e79]:
+            - img [ref=e81]
+            - heading "Progress Tracking" [level=3] [ref=e83]
+            - paragraph [ref=e84]: Monitor your learning progress with detailed analytics and personalized recommendations.
+          - generic [ref=e86]:
+            - img [ref=e88]
+            - heading "Flashcards" [level=3] [ref=e90]
+            - paragraph [ref=e91]: Generate intelligent flashcards from video content for effective memorization and review.
+          - generic [ref=e93]:
+            - img [ref=e95]
+            - heading "Quizzes & Tests" [level=3] [ref=e98]
+            - paragraph [ref=e99]: Create and take quizzes based on video content to test your understanding and retention.
+      - generic [ref=e100]:
+        - generic [ref=e101]:
+          - heading "Simple, Transparent Pricing" [level=2] [ref=e102]:
+            - text: Simple, Transparent
+            - generic [ref=e103]: Pricing
+          - paragraph [ref=e104]: Choose the plan that fits your learning needs. No hidden fees, cancel anytime.
+        - generic [ref=e105]:
+          - generic [ref=e106]:
+            - generic [ref=e107]:
+              - heading "Free" [level=3] [ref=e108]
+              - paragraph [ref=e109]: Perfect for getting started
+              - generic [ref=e110]:
+                - text: $0
+                - generic [ref=e111]: /month
+            - list [ref=e113]:
+              - listitem [ref=e114]:
+                - img [ref=e115]
+                - text: 5 videos per month
+              - listitem [ref=e118]:
+                - img [ref=e119]
+                - text: Basic AI analysis
+              - listitem [ref=e122]:
+                - img [ref=e123]
+                - text: Standard transcripts
+          - generic [ref=e126]:
+            - generic [ref=e127]:
+              - generic [ref=e128]:
+                - heading "Pro" [level=3] [ref=e129]
+                - generic [ref=e130]: Popular
+              - paragraph [ref=e131]: For serious learners
+              - generic [ref=e132]:
+                - text: $19
+                - generic [ref=e133]: /month
+            - list [ref=e135]:
+              - listitem [ref=e136]:
+                - img [ref=e137]
+                - text: Unlimited videos
+              - listitem [ref=e140]:
+                - img [ref=e141]
+                - text: Advanced AI analysis
+              - listitem [ref=e144]:
+                - img [ref=e145]
+                - text: Smart flashcards
+              - listitem [ref=e148]:
+                - img [ref=e149]
+                - text: Progress tracking
+          - generic [ref=e152]:
+            - generic [ref=e153]:
+              - heading "Team" [level=3] [ref=e154]
+              - paragraph [ref=e155]: For organizations
+              - generic [ref=e156]:
+                - text: $49
+                - generic [ref=e157]: /month
+            - list [ref=e159]:
+              - listitem [ref=e160]:
+                - img [ref=e161]
+                - text: Everything in Pro
+              - listitem [ref=e164]:
+                - img [ref=e165]
+                - text: Team collaboration
+              - listitem [ref=e168]:
+                - img [ref=e169]
+                - text: Admin dashboard
+              - listitem [ref=e172]:
+                - img [ref=e173]
+                - text: Priority support
+      - generic [ref=e176]:
+        - generic [ref=e177]:
+          - heading "About VideoTeacher" [level=2] [ref=e178]:
+            - text: About
+            - generic [ref=e179]: VideoTeacher
+          - paragraph [ref=e180]: We believe that every video has the potential to be a powerful learning tool. Our AI-powered platform makes it easy to extract knowledge and create engaging study materials.
+        - generic [ref=e181]:
+          - generic [ref=e182]:
+            - heading "Our Mission" [level=3] [ref=e183]
+            - paragraph [ref=e184]: To democratize education by making any video content accessible, searchable, and learnable. We use cutting-edge AI to transform passive video watching into active learning experiences.
+            - generic [ref=e185]:
+              - generic [ref=e186]:
+                - img [ref=e188]
+                - generic [ref=e191]:
+                  - heading "AI-Powered Analysis" [level=4] [ref=e192]
+                  - paragraph [ref=e193]: Advanced algorithms extract key concepts and insights
+              - generic [ref=e194]:
+                - img [ref=e196]
+                - generic [ref=e199]:
+                  - heading "Interactive Learning" [level=4] [ref=e200]
+                  - paragraph [ref=e201]: Transform videos into engaging study materials
+              - generic [ref=e202]:
+                - img [ref=e204]
+                - generic [ref=e207]:
+                  - heading "Progress Tracking" [level=4] [ref=e208]
+                  - paragraph [ref=e209]: Monitor your learning journey with detailed analytics
+          - generic [ref=e210]:
+            - img [ref=e212]
+            - heading "Join Our Community" [level=3] [ref=e220]
+            - paragraph [ref=e221]: Over 10,000 learners are already using VideoTeacher to study smarter and learn faster.
+            - generic [ref=e222]:
+              - generic [ref=e223]:
+                - text: 10K+
+                - generic [ref=e224]: Users
+              - generic [ref=e225]:
+                - text: 50K+
+                - generic [ref=e226]: Videos
+              - generic [ref=e227]:
+                - text: 1M+
+                - generic [ref=e228]: Cards
+      - generic [ref=e231]:
+        - heading "Ready to Transform Your Learning?" [level=2] [ref=e232]
+        - paragraph [ref=e233]: Join thousands of learners already using VideoTeacher to study smarter.
+        - generic [ref=e234]:
+          - link "Start Free Trial" [ref=e235]:
+            - /url: /upload
+            - button "Start Free Trial" [ref=e236]:
+              - text: Start Free Trial
+              - img [ref=e237]
+          - button "Learn More" [ref=e239]
+      - generic [ref=e241]:
+        - generic [ref=e242]:
+          - generic [ref=e243]:
+            - generic [ref=e244]:
+              - img [ref=e246]
+              - generic [ref=e254]: VideoTeacher
+            - paragraph [ref=e255]: Transform any video into an interactive learning experience with AI-powered analysis.
+          - generic [ref=e256]:
+            - heading "Product" [level=3] [ref=e257]
+            - list [ref=e258]:
+              - listitem [ref=e259]:
+                - link "Features" [ref=e260]:
+                  - /url: "#features"
+              - listitem [ref=e261]:
+                - link "Pricing" [ref=e262]:
+                  - /url: "#pricing"
+              - listitem [ref=e263]:
+                - link "Get Started" [ref=e264]:
+                  - /url: /upload
+          - generic [ref=e265]:
+            - heading "Company" [level=3] [ref=e266]
+            - list [ref=e267]:
+              - listitem [ref=e268]:
+                - link "About" [ref=e269]:
+                  - /url: "#about"
+              - listitem [ref=e270]:
+                - link "Blog" [ref=e271]:
+                  - /url: "#"
+              - listitem [ref=e272]:
+                - link "Careers" [ref=e273]:
+                  - /url: "#"
+          - generic [ref=e274]:
+            - heading "Support" [level=3] [ref=e275]
+            - list [ref=e276]:
+              - listitem [ref=e277]:
+                - link "Help Center" [ref=e278]:
+                  - /url: "#"
+              - listitem [ref=e279]:
+                - link "Contact" [ref=e280]:
+                  - /url: "#"
+              - listitem [ref=e281]:
+                - link "Status" [ref=e282]:
+                  - /url: "#"
+        - paragraph [ref=e284]: © 2024 VideoTeacher. All rights reserved.
+  - alert [ref=e285]
+```

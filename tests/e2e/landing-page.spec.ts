@@ -15,7 +15,11 @@ test.describe("Landing Page", () => {
 
   test("renders feature cards", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByText(/AI Analysis/i)).toBeVisible();
-    await expect(page.getByText(/Smart Transcripts/i)).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'AI Analysis' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Smart Transcripts' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Study Groups' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Progress Tracking' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Flashcards' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Quizzes & Tests' })).toBeVisible();
   });
 });

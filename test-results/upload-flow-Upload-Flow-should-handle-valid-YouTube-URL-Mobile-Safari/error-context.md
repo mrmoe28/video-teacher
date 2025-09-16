@@ -1,0 +1,76 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - link "Skip to content" [ref=e2]:
+    - /url: "#main"
+  - main [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - img [ref=e10]
+          - generic [ref=e12]:
+            - generic [ref=e13]:
+              - heading "Video Overview" [level=3] [ref=e14]
+              - paragraph [ref=e15]: Loading...
+            - generic [ref=e17]:
+              - paragraph [ref=e18]:
+                - strong [ref=e19]: "Channel:"
+              - paragraph [ref=e20]:
+                - strong [ref=e21]: "Duration:"
+                - text: Unknown
+              - paragraph [ref=e22]:
+                - strong [ref=e23]: "Status:"
+                - text: Not transcribed
+        - generic [ref=e24]:
+          - generic [ref=e25]:
+            - generic [ref=e26]:
+              - heading "AI Insights" [level=3] [ref=e27]:
+                - img [ref=e28]
+                - text: AI Insights
+              - paragraph [ref=e36]: Key takeaways generated from the transcript.
+            - generic [ref=e38]:
+              - generic [ref=e39]:
+                - heading "Summary" [level=4] [ref=e40]
+                - paragraph [ref=e41]: Test video summary
+              - generic [ref=e42]:
+                - heading "Topics" [level=4] [ref=e43]
+                - generic [ref=e44]:
+                  - generic [ref=e45]: AI
+                  - generic [ref=e46]: Learning
+                  - generic [ref=e47]: Technology
+              - generic [ref=e48]:
+                - heading "Key Moments" [level=4] [ref=e49]
+                - generic [ref=e51]:
+                  - generic [ref=e52]: 00:30
+                  - generic [ref=e53]: Introduction
+          - generic [ref=e54]:
+            - generic [ref=e55]:
+              - heading "Transcript" [level=3] [ref=e56]:
+                - img [ref=e57]
+                - text: Transcript
+              - paragraph [ref=e60]: No transcript found
+            - paragraph [ref=e62]: Transcript not available for this video.
+          - generic [ref=e63]:
+            - generic [ref=e64]:
+              - heading "Study Materials" [level=3] [ref=e65]:
+                - img [ref=e66]
+                - text: Study Materials
+              - paragraph [ref=e69]: Generate flashcards and quizzes.
+            - generic [ref=e70]:
+              - button "Generate Deck" [ref=e71]
+              - button "Create Quiz" [ref=e72]
+      - generic [ref=e73]: More related videos coming soon.
+  - generic [ref=e78] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e79] [cursor=pointer]:
+      - img [ref=e80] [cursor=pointer]
+    - generic [ref=e85] [cursor=pointer]:
+      - button "Open issues overlay" [ref=e86] [cursor=pointer]:
+        - generic [ref=e87] [cursor=pointer]:
+          - generic [ref=e88] [cursor=pointer]: "0"
+          - generic [ref=e89] [cursor=pointer]: "1"
+        - generic [ref=e90] [cursor=pointer]: Issue
+      - button "Collapse issues badge" [ref=e91] [cursor=pointer]:
+        - img [ref=e92] [cursor=pointer]
+  - alert [ref=e94]
+```
