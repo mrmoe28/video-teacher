@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { YoutubeTranscript } from 'youtube-transcript';
-import { db } from '@/lib/db';
-import { videos, transcripts } from '@/lib/drizzle/schema';
-import { eq } from 'drizzle-orm';
 
 // Helper function to parse ISO 8601 duration to seconds
 function parseDuration(duration: string): number {
@@ -107,18 +104,10 @@ export async function POST(request: NextRequest) {
     // Try to fetch captions
     let hasCaption = false;
     let transcriptPreview: string | undefined;
-    let captionsData: Array<{start: number, end: number, text: string}> = [];
 
     try {
       const transcript = await YoutubeTranscript.fetchTranscript(youtubeId);
       hasCaption = true;
-
-      // Convert transcript format and create preview
-      captionsData = transcript.map((item: { offset: number; duration: number; text: string }) => ({
-        start: item.offset / 1000, // Convert ms to seconds
-        end: (item.offset + item.duration) / 1000,
-        text: item.text
-      }));
 
       // Create a preview (first 200 characters)
       transcriptPreview = transcript

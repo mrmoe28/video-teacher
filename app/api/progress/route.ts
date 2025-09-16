@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { db } from '@/lib/db';
-import { videos, transcripts, decks } from '@/lib/drizzle/schema';
-import { eq } from 'drizzle-orm';
 
 // Input validation schemas
 const createProgressSchema = z.object({
@@ -174,7 +171,7 @@ export async function GET(request: NextRequest) {
     const progressData = progressStore.get(progressKey);
 
     let progress: ProgressResponse | undefined;
-    if (progressData) {
+    if (progressData && progressData.videoId && progressData.userId) {
       progress = {
         videoId: progressData.videoId,
         userId: progressData.userId,
