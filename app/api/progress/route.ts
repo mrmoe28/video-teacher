@@ -134,57 +134,48 @@ export async function GET(request: NextRequest) {
     // For now, return mock data for development
     console.log('Skipping database query due to connection issues');
     
-    // Check if this is a mock video ID or extract YouTube ID from mock ID
-    let youtubeId = validatedInput.videoId;
-    let isMockVideo = false;
-    
-    if (validatedInput.videoId.startsWith('mock-')) {
-      isMockVideo = true;
-      // Extract YouTube ID from mock ID format: mock-{youtubeId}-{timestamp}
-      const mockParts = validatedInput.videoId.split('-');
-      if (mockParts.length >= 2) {
-        youtubeId = mockParts[1];
-      }
+    // Use the video ID directly (no more mock IDs)
+    const youtubeId = validatedInput.videoId;
+
+    // Fetch video metadata from YouTube API
+    const apiKey = process.env.YOUTUBE_API_KEY;
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: 'YouTube API key not configured' },
+        { status: 500 }
+      );
     }
 
-    // Try to fetch video metadata from YouTube API
     let videoData = null;
     try {
-      const apiKey = process.env.YOUTUBE_API_KEY;
-      if (apiKey) {
-        const response = await fetch(
-          `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${youtubeId}&key=${apiKey}`
-        );
-        
-        if (response.ok) {
-          const data = await response.json();
-          if (data.items && data.items.length > 0) {
-            const videoInfo = data.items[0];
-            videoData = {
-              id: validatedInput.videoId,
-              title: videoInfo.snippet.title,
-              channel: videoInfo.snippet.channelTitle,
-              duration: parseDuration(videoInfo.contentDetails.duration),
-              thumbnailUrl: videoInfo.snippet.thumbnails?.default?.url,
-              url: `https://www.youtube.com/watch?v=${youtubeId}`
-            };
-          }
-        }
+      const response = await fetch(
+        `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&id=${youtubeId}&key=${apiKey}`
+      );
+      
+      if (!response.ok) {
+        throw new Error(`YouTube API error: ${response.status}`);
       }
-    } catch (error) {
-      console.error('Error fetching YouTube metadata:', error);
-    }
-
-    // If we couldn't fetch real data, use mock data
-    if (!videoData) {
+      
+      const data = await response.json();
+      if (!data.items || data.items.length === 0) {
+        throw new Error('Video not found');
+      }
+      
+      const videoInfo = data.items[0];
       videoData = {
         id: validatedInput.videoId,
-        title: isMockVideo ? 'Sample Video Title' : 'Video Not Found',
-        channel: isMockVideo ? 'Sample Channel' : 'Unknown',
-        duration: isMockVideo ? 213 : 0,
-        thumbnailUrl: isMockVideo ? 'https://via.placeholder.com/120x90' : undefined,
+        title: videoInfo.snippet.title,
+        channel: videoInfo.snippet.channelTitle,
+        duration: parseDuration(videoInfo.contentDetails.duration),
+        thumbnailUrl: videoInfo.snippet.thumbnails?.default?.url,
         url: `https://www.youtube.com/watch?v=${youtubeId}`
       };
+    } catch (error) {
+      console.error('Error fetching YouTube metadata:', error);
+      return NextResponse.json(
+        { error: 'Could not fetch video metadata. Video may be private or unavailable.' },
+        { status: 404 }
+      );
     }
 
     // Get progress from store
@@ -202,10 +193,20 @@ export async function GET(request: NextRequest) {
       };
     }
 
+    // Check if transcript is available
+    let hasTranscript = false;
+    try {
+      const { YoutubeTranscript } = await import('youtube-transcript');
+      await YoutubeTranscript.fetchTranscript(youtubeId);
+      hasTranscript = true;
+    } catch {
+      hasTranscript = false;
+    }
+
     // Return the video data with progress
     const response: VideoProgressResponse = {
       video: videoData,
-      hasTranscript: isMockVideo, // Mock videos have transcripts, real videos need to be checked
+      hasTranscript,
       hasDeck: false,
       progress
     };

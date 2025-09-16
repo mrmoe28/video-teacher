@@ -57,21 +57,8 @@ export default function VideoDetailPage(props: unknown) {
           const data = await progressResponse.json();
           setVideoData(data);
         } else {
-          // If progress API fails, try to create basic video data from YouTube ID
-          const youtubeId = id.startsWith('mock-') ? id.split('-')[1] : id;
-          if (youtubeId && youtubeId.length === 11) { // YouTube IDs are 11 characters
-            setVideoData({
-              video: {
-                id: id,
-                title: 'Loading...',
-                channel: 'Loading...',
-                duration: 0,
-                url: `https://www.youtube.com/watch?v=${youtubeId}`
-              },
-              hasTranscript: false,
-              hasDeck: false
-            });
-          }
+          // If progress API fails, show error
+          setError('Failed to load video data. Please check if the video ID is valid.');
         }
 
         // Load analysis data
@@ -212,10 +199,8 @@ export default function VideoDetailPage(props: unknown) {
             <CardContent className="text-gray-300 space-y-3">
               {videoData?.hasTranscript ? (
                 <div className="space-y-2">
-                  <p>[00:00] Video introduction and overview</p>
-                  <p>[00:45] Main topic discussion begins</p>
-                  <p>[02:10] Key concepts and examples</p>
-                  <p className="text-sm text-gray-400">... (transcript preview)</p>
+                  <p className="text-sm text-gray-400">Transcript is available for this video.</p>
+                  <p className="text-sm text-gray-400">Full transcript content will be displayed here once the transcript API is implemented.</p>
                 </div>
               ) : (
                 <p className="text-gray-400">Transcript not available for this video.</p>

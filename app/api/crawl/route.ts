@@ -53,44 +53,34 @@ export async function POST(request: NextRequest) {
     console.log('Skipping database check due to connection issues');
 
     // Fetch video metadata using YouTube Data API v3
+    const apiKey = process.env.YOUTUBE_API_KEY;
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: 'YouTube API key not configured. Please set YOUTUBE_API_KEY environment variable.' },
+        { status: 500 }
+      );
+    }
+
     let videoInfo;
     try {
-      const apiKey = process.env.YOUTUBE_API_KEY;
-      if (!apiKey) {
-        // Fallback: create mock data for development
-        console.log('No YouTube API key found, using mock data');
-        videoInfo = {
-          snippet: {
-            title: 'Sample Video Title',
-            channelTitle: 'Sample Channel',
-            thumbnails: {
-              default: { url: 'https://via.placeholder.com/120x90' }
-            }
-          },
-          contentDetails: {
-            duration: 'PT3M33S' // 3 minutes 33 seconds
-          }
-        };
-      } else {
-        const response = await fetch(
-          `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${youtubeId}&key=${apiKey}`
-        );
-        
-        if (!response.ok) {
-          throw new Error(`YouTube API error: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        if (!data.items || data.items.length === 0) {
-          throw new Error('Video not found');
-        }
-        
-        videoInfo = data.items[0];
+      const response = await fetch(
+        `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&id=${youtubeId}&key=${apiKey}`
+      );
+      
+      if (!response.ok) {
+        throw new Error(`YouTube API error: ${response.status}`);
       }
+      
+      const data = await response.json();
+      if (!data.items || data.items.length === 0) {
+        throw new Error('Video not found');
+      }
+      
+      videoInfo = data.items[0];
     } catch (apiError) {
       console.error('YouTube API error:', apiError);
       return NextResponse.json(
-        { error: 'Could not fetch video metadata. Video may be private or unavailable.' },
+        { error: 'Could not fetch video metadata. Video may be private, unavailable, or the API key may be invalid.' },
         { status: 404 }
       );
     }
@@ -122,13 +112,12 @@ export async function POST(request: NextRequest) {
     }
 
     // TODO: Fix database connection issue
-    // For now, skip database save and return mock video ID
+    // For now, skip database save and return actual YouTube video ID
     console.log('Skipping database save due to connection issues');
     
-    const mockVideoId = `mock-${youtubeId}-${Date.now()}`;
-
+    // Use the actual YouTube video ID instead of mock ID
     const response: CrawlResponse = {
-      videoId: mockVideoId,
+      videoId: youtubeId,
       title,
       channel,
       duration: durationSeconds,
