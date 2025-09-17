@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
     console.log('Skipping database check due to connection issues');
 
     // Fetch video metadata using YouTube Data API v3
-    const apiKey = process.env.YOUTUBE_API_KEY;
+    const apiKey = process.env.YOUTUBE_API_KEY || "AIzaSyAKTV_JHkK1lKhbpmZoNKi98geg_X0lFSQ";
     if (!apiKey) {
       return NextResponse.json(
         { error: 'YouTube API key not configured. Please set YOUTUBE_API_KEY environment variable.' },

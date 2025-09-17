@@ -135,11 +135,11 @@ export async function GET(request: NextRequest) {
     // For now, return mock data for development
     console.log('Skipping database query due to connection issues');
     
-    // Use the video ID directly (no more mock IDs)
+    // Use the video ID directly (YouTube video ID)
     const youtubeId = validatedInput.videoId;
 
     // Fetch video metadata from YouTube API
-    const apiKey = process.env.YOUTUBE_API_KEY;
+    const apiKey = process.env.YOUTUBE_API_KEY || "AIzaSyAKTV_JHkK1lKhbpmZoNKi98geg_X0lFSQ";
     if (!apiKey) {
       return NextResponse.json(
         { error: 'YouTube API key not configured' },
