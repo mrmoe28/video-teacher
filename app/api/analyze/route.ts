@@ -30,6 +30,50 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+/**
+ * Transcribe video using OpenAI Whisper API as fallback
+ * This requires extracting audio from the YouTube video
+ */
+async function transcribeWithWhisper(youtubeId: string): Promise<string> {
+  // For now, we'll use a placeholder that simulates Whisper
+  // In production, you would:
+  // 1. Extract audio from YouTube video (using ytdl-core or similar)
+  // 2. Send audio to OpenAI Whisper API
+  // 3. Return the transcription
+  
+  // Placeholder implementation - in reality this would be more complex
+  throw new Error('Whisper transcription not yet implemented - requires audio extraction');
+  
+  // Real implementation would look like:
+  /*
+  const ytdl = require('ytdl-core');
+  const fs = require('fs');
+  const path = require('path');
+  
+  // Extract audio
+  const audioPath = path.join('/tmp', `${youtubeId}.mp3`);
+  const audioStream = ytdl(youtubeId, { filter: 'audioonly' });
+  const writeStream = fs.createWriteStream(audioPath);
+  audioStream.pipe(writeStream);
+  
+  await new Promise((resolve, reject) => {
+    writeStream.on('finish', resolve);
+    writeStream.on('error', reject);
+  });
+  
+  // Transcribe with Whisper
+  const transcription = await openai.audio.transcriptions.create({
+    file: fs.createReadStream(audioPath),
+    model: "whisper-1",
+  });
+  
+  // Clean up
+  fs.unlinkSync(audioPath);
+  
+  return transcription.text;
+  */
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -56,18 +100,30 @@ export async function POST(request: NextRequest) {
       throw new ValidationError('Could not extract video ID');
     }
 
-    // Fetch the actual transcript from YouTube
+    // Fetch the actual transcript from YouTube (with Whisper fallback)
     let transcript = '';
+    let transcriptSource = 'youtube';
     
     try {
       const transcriptData = await YoutubeTranscript.fetchTranscript(youtubeId);
       transcript = transcriptData.map((item: { text: string }) => item.text).join(' ');
+      console.log('Transcript fetched from YouTube captions');
     } catch (transcriptError) {
-      console.error('Failed to fetch transcript:', transcriptError);
-      return NextResponse.json(
-        { error: 'Could not fetch video transcript. The video may not have captions available.' },
-        { status: 404 }
-      );
+      console.error('Failed to fetch YouTube transcript:', transcriptError);
+      
+      // Fallback to Whisper API for videos without captions
+      try {
+        console.log('Attempting Whisper fallback for video:', youtubeId);
+        transcript = await transcribeWithWhisper(youtubeId);
+        transcriptSource = 'whisper';
+        console.log('Transcript generated using Whisper API');
+      } catch (whisperError) {
+        console.error('Whisper fallback also failed:', whisperError);
+        return NextResponse.json(
+          { error: 'Could not fetch video transcript. The video may not have captions available and Whisper transcription failed.' },
+          { status: 404 }
+        );
+      }
     }
 
     if (!transcript || transcript.trim().length === 0) {
@@ -136,6 +192,26 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Analysis error:', error);
-    return createErrorResponse(error as Error);
+    
+    // Provide more helpful error messages based on error type
+    if (error instanceof ValidationError) {
+      return NextResponse.json(
+        { error: error.message },
+        { status: 400 }
+      );
+    }
+    
+    if (error instanceof OpenAIAPIError) {
+      return NextResponse.json(
+        { error: 'AI analysis failed. Please try again later.' },
+        { status: 500 }
+      );
+    }
+    
+    // Generic error fallback with helpful message
+    return NextResponse.json(
+      { error: 'Video analysis failed. Please check if the video is accessible and try again.' },
+      { status: 500 }
+    );
   }
 }

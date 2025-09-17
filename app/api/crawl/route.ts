@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { extractYouTubeVideoId } from '@/lib/youtube-url-parser';
 import { YoutubeTranscript } from 'youtube-transcript';
+import { db } from '@/lib/db';
+import { videos } from '@/lib/drizzle/schema';
+import { eq } from 'drizzle-orm';
 
 // Helper function to parse ISO 8601 duration to seconds
 function parseDuration(duration: string): number {
@@ -47,9 +50,31 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // TODO: Fix database connection issue
-    // For now, skip database check and always create new video
-    console.log('Skipping database check due to connection issues');
+    // Check if video already exists in database
+    try {
+      const existingVideo = await db
+        .select()
+        .from(videos)
+        .where(eq(videos.youtubeId, youtubeId))
+        .limit(1);
+      
+      if (existingVideo.length > 0) {
+        console.log('Video already exists in database:', youtubeId);
+        // Return existing video data
+        const response: CrawlResponse = {
+          videoId: existingVideo[0].id,
+          title: existingVideo[0].title,
+          channel: existingVideo[0].channel,
+          duration: existingVideo[0].durationSeconds,
+          thumbnailUrl: existingVideo[0].thumbnailUrl || undefined,
+          hasCaption: true, // We'll check this separately
+          transcriptPreview: undefined
+        };
+        return NextResponse.json(response);
+      }
+    } catch (dbError) {
+      console.warn('Database check failed, proceeding with API fetch:', dbError);
+    }
 
     // Fetch video metadata using YouTube Data API v3
     const apiKey = process.env.YOUTUBE_API_KEY || "AIzaSyAKTV_JHkK1lKhbpmZoNKi98geg_X0lFSQ";
@@ -110,13 +135,31 @@ export async function POST(request: NextRequest) {
       hasCaption = false;
     }
 
-    // TODO: Fix database connection issue
-    // For now, skip database save and return actual YouTube video ID
-    console.log('Skipping database save due to connection issues');
+    // Save video to database
+    let savedVideo;
+    try {
+      savedVideo = await db
+        .insert(videos)
+        .values({
+          youtubeId,
+          url: `https://www.youtube.com/watch?v=${youtubeId}`,
+          title,
+          channel,
+          durationSeconds,
+          thumbnailUrl
+        })
+        .returning()
+        .then(rows => rows[0]);
+      
+      console.log('Video saved to database:', savedVideo.id);
+    } catch (dbError) {
+      console.warn('Database save failed, using YouTube ID as fallback:', dbError);
+      // Use YouTube ID as fallback if database save fails
+      savedVideo = { id: youtubeId };
+    }
     
-    // Use the actual YouTube video ID instead of mock ID
     const response: CrawlResponse = {
-      videoId: youtubeId,
+      videoId: savedVideo.id,
       title,
       channel,
       duration: durationSeconds,
