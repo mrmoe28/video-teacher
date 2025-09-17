@@ -111,13 +111,17 @@ export default function UploadPage() {
   // Handle videoId from URL parameter (support both videoId and videoid)
   useEffect(() => {
     const videoId = searchParams.get('videoId') || searchParams.get('videoid');
+    console.log('Upload page - URL parameter videoId:', videoId);
+    
     if (videoId) {
       // Validate that this is a proper YouTube video ID (11 characters, alphanumeric + _ -)
       const isValidYouTubeId = /^[a-zA-Z0-9_-]{11}$/.test(videoId);
+      console.log('Upload page - Video ID validation:', { videoId, isValid: isValidYouTubeId });
       
       if (isValidYouTubeId) {
         // Construct the YouTube URL from the video ID
         const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
+        console.log('Upload page - Constructed YouTube URL:', youtubeUrl);
         setUrl(youtubeUrl);
         // Automatically start processing
         handleAnalyzeWithUrl(youtubeUrl);
