@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+import { extractYouTubeVideoId } from '@/lib/youtube-url-parser';
 import { YoutubeTranscript } from 'youtube-transcript';
 
 // Helper function to parse ISO 8601 duration to seconds
@@ -37,16 +38,14 @@ export async function POST(request: NextRequest) {
     // Validate input
     const validatedInput = crawlSchema.parse(body);
 
-    // Extract YouTube video ID from URL
-    const urlMatch = validatedInput.url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
-    if (!urlMatch) {
+    // Extract YouTube video ID using comprehensive parser
+    const youtubeId = extractYouTubeVideoId(validatedInput.url);
+    if (!youtubeId) {
       return NextResponse.json(
-        { error: 'Invalid YouTube URL format' },
+        { error: 'Invalid YouTube URL format. Supports all YouTube URL formats including youtu.be, mobile, shorts, embed, and more.' },
         { status: 400 }
       );
     }
-
-    const youtubeId = urlMatch[1];
 
     // TODO: Fix database connection issue
     // For now, skip database check and always create new video

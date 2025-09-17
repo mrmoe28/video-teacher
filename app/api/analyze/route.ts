@@ -3,6 +3,7 @@ import { z } from 'zod';
 import OpenAI from 'openai';
 import { YoutubeTranscript } from 'youtube-transcript';
 import { ValidationError, OpenAIAPIError, createErrorResponse } from '@/lib/errors';
+import { extractYouTubeVideoId } from '@/lib/youtube-url-parser';
 
 // Input validation schema
 const analyzeSchema = z.object({
@@ -44,11 +45,10 @@ export async function POST(request: NextRequest) {
     // Extract YouTube video ID from URL if provided
     let youtubeId = input.videoId;
     if (input.url && !youtubeId) {
-      const urlMatch = input.url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
-      if (!urlMatch) {
-        throw new ValidationError('Invalid YouTube URL format');
+      youtubeId = extractYouTubeVideoId(input.url);
+      if (!youtubeId) {
+        throw new ValidationError('Invalid YouTube URL format. Supports all YouTube URL formats including youtu.be, mobile, shorts, embed, and more.');
       }
-      youtubeId = urlMatch[1];
     }
 
     if (!youtubeId) {

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sparkles, Loader2, AlertCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { extractYouTubeVideoId, isValidYouTubeUrl } from "@/lib/youtube-url-parser";
 
 interface QuickLessonFormProps {
   variant?: "default" | "compact";
@@ -20,8 +21,6 @@ export function QuickLessonForm({
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)[\w-]+/;
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -30,8 +29,9 @@ export function QuickLessonForm({
       return;
     }
 
-    if (!youtubeRegex.test(url)) {
-      setError("Please enter a valid YouTube URL");
+    // Use comprehensive YouTube URL validation
+    if (!isValidYouTubeUrl(url)) {
+      setError("Please enter a valid YouTube URL. Supports all YouTube URL formats including youtu.be, mobile, shorts, and more.");
       return;
     }
 
@@ -39,26 +39,20 @@ export function QuickLessonForm({
     setError("");
 
     try {
-      // Extract video ID from URL
-      const videoId = extractVideoId(url);
+      // Extract video ID using comprehensive parser
+      const videoId = extractYouTubeVideoId(url);
       if (!videoId) {
-        throw new Error("Invalid YouTube URL");
+        throw new Error("Could not extract video ID from URL");
       }
 
       // Navigate to upload page with the video ID
       router.push(`/upload?videoId=${videoId}`);
     } catch (err) {
-      setError("Failed to process YouTube URL. Please try again.");
+      setError("Failed to process YouTube URL. Please try again with a different format.");
       console.error("Error processing URL:", err);
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const extractVideoId = (url: string): string | null => {
-    const regex = /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/;
-    const match = url.match(regex);
-    return match ? match[1] : null;
   };
 
   if (variant === "compact") {

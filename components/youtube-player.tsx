@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
+import { extractYouTubeVideoId } from "@/lib/youtube-url-parser";
 
 interface YouTubePlayerProps {
   videoId: string;
@@ -29,19 +30,8 @@ export function YouTubePlayer({
       return;
     }
 
-    // Extract YouTube ID from various formats
-    const extractVideoId = (id: string) => {
-      // Already a video ID
-      if (id.length === 11 && !id.includes('/')) {
-        return id;
-      }
-      
-      // Full YouTube URL
-      const match = id.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/);
-      return match ? match[1] : id;
-    };
-
-    const cleanVideoId = extractVideoId(videoId);
+    // Extract YouTube ID using comprehensive parser
+    const cleanVideoId = extractYouTubeVideoId(videoId) || videoId;
     
     // Validate video ID format
     if (!cleanVideoId || cleanVideoId.length !== 11) {
