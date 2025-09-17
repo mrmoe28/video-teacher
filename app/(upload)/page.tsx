@@ -50,6 +50,12 @@ export default function UploadPage() {
       const crawlData = await crawlResponse.json();
       console.log('Crawl data received:', crawlData);
       console.log('Video ID from crawl:', crawlData.videoId);
+      
+      // Validate the video ID from crawl response
+      if (!crawlData.videoId || typeof crawlData.videoId !== 'string') {
+        throw new Error('Invalid video ID received from crawl API');
+      }
+      
       setJobStatus('transcribing');
 
       // Start transcription job
@@ -84,9 +90,15 @@ export default function UploadPage() {
       setAnalysis(analysisData);
       setJobStatus('ready');
 
+      // Validate video ID before navigation
+      const finalVideoId = crawlData.videoId;
+      if (!finalVideoId || finalVideoId.length !== 11) {
+        throw new Error(`Invalid video ID for navigation: "${finalVideoId}"`);
+      }
+      
       // Navigate to video page
-      console.log('Navigating to:', `/video/${crawlData.videoId}`);
-      router.push(`/video/${crawlData.videoId}`);
+      console.log('Navigating to:', `/video/${finalVideoId}`);
+      router.push(`/video/${finalVideoId}`);
 
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
