@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import OpenAI from 'openai';
 import { YoutubeTranscript } from 'youtube-transcript';
-import { ValidationError, OpenAIAPIError, createErrorResponse } from '@/lib/errors';
+import { ValidationError, OpenAIAPIError } from '@/lib/errors';
 import { extractYouTubeVideoId } from '@/lib/youtube-url-parser';
 
 // Input validation schema
@@ -34,7 +34,7 @@ const openai = new OpenAI({
  * Transcribe video using OpenAI Whisper API as fallback
  * This requires extracting audio from the YouTube video
  */
-async function transcribeWithWhisper(youtubeId: string): Promise<string> {
+async function transcribeWithWhisper(_youtubeId: string): Promise<string> {
   // For now, we'll use a placeholder that simulates Whisper
   // In production, you would:
   // 1. Extract audio from YouTube video (using ytdl-core or similar)
@@ -102,7 +102,7 @@ export async function POST(request: NextRequest) {
 
     // Fetch the actual transcript from YouTube (with Whisper fallback)
     let transcript = '';
-    let transcriptSource = 'youtube';
+    const transcriptSource = 'youtube'; // Will be used for future metadata tracking
     
     try {
       const transcriptData = await YoutubeTranscript.fetchTranscript(youtubeId);
@@ -115,7 +115,7 @@ export async function POST(request: NextRequest) {
       try {
         console.log('Attempting Whisper fallback for video:', youtubeId);
         transcript = await transcribeWithWhisper(youtubeId);
-        transcriptSource = 'whisper';
+        // transcriptSource = 'whisper'; // Future enhancement
         console.log('Transcript generated using Whisper API');
       } catch (whisperError) {
         console.error('Whisper fallback also failed:', whisperError);
