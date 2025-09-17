@@ -16,7 +16,7 @@ export function YouTubePlayer({
   videoId,
   className = "",
   autoplay = false,
-  onTimeUpdate,
+  onTimeUpdate: _onTimeUpdate,
   startTime = 0
 }: YouTubePlayerProps) {
   const [isLoading, setIsLoading] = useState(true);

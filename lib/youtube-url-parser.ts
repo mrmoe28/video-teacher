@@ -108,7 +108,7 @@ export function parseYouTubeUrl(input: string): YouTubeUrlInfo {
       
       // Extract playlist ID
       playlistId = url.searchParams.get('list') || undefined;
-    } catch (e) {
+    } catch {
       // If URL parsing fails, try regex for time extraction
       const timeMatch = input.match(/[&?]t=([^&]+)/);
       if (timeMatch) {

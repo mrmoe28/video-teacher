@@ -45,10 +45,11 @@ export async function POST(request: NextRequest) {
     // Extract YouTube video ID from URL if provided
     let youtubeId = input.videoId;
     if (input.url && !youtubeId) {
-      youtubeId = extractYouTubeVideoId(input.url);
-      if (!youtubeId) {
+      const extractedId = extractYouTubeVideoId(input.url);
+      if (!extractedId) {
         throw new ValidationError('Invalid YouTube URL format. Supports all YouTube URL formats including youtu.be, mobile, shorts, embed, and more.');
       }
+      youtubeId = extractedId;
     }
 
     if (!youtubeId) {
