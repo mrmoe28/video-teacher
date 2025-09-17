@@ -4,6 +4,10 @@ import OpenAI from 'openai';
 import { YoutubeTranscript } from 'youtube-transcript';
 import { ValidationError, OpenAIAPIError } from '@/lib/errors';
 import { extractYouTubeVideoId } from '@/lib/youtube-url-parser';
+import ytdl from 'ytdl-core';
+import { createWriteStream, unlinkSync, createReadStream } from 'fs';
+import { join } from 'path';
+import { tmpdir } from 'os';
 
 // Input validation schema
 const analyzeSchema = z.object({
@@ -32,46 +36,79 @@ const openai = new OpenAI({
 
 /**
  * Transcribe video using OpenAI Whisper API as fallback
- * This requires extracting audio from the YouTube video
+ * Extracts audio from YouTube video and sends it to Whisper for transcription
  */
-async function transcribeWithWhisper(_youtubeId: string): Promise<string> {
-  // For now, we'll use a placeholder that simulates Whisper
-  // In production, you would:
-  // 1. Extract audio from YouTube video (using ytdl-core or similar)
-  // 2. Send audio to OpenAI Whisper API
-  // 3. Return the transcription
+async function transcribeWithWhisper(youtubeId: string): Promise<string> {
+  const audioPath = join(tmpdir(), `${youtubeId}_${Date.now()}.mp4`);
   
-  // Placeholder implementation - in reality this would be more complex
-  throw new Error('Whisper transcription not yet implemented - requires audio extraction');
-  
-  // Real implementation would look like:
-  /*
-  const ytdl = require('ytdl-core');
-  const fs = require('fs');
-  const path = require('path');
-  
-  // Extract audio
-  const audioPath = path.join('/tmp', `${youtubeId}.mp3`);
-  const audioStream = ytdl(youtubeId, { filter: 'audioonly' });
-  const writeStream = fs.createWriteStream(audioPath);
-  audioStream.pipe(writeStream);
-  
-  await new Promise((resolve, reject) => {
-    writeStream.on('finish', resolve);
-    writeStream.on('error', reject);
-  });
-  
-  // Transcribe with Whisper
-  const transcription = await openai.audio.transcriptions.create({
-    file: fs.createReadStream(audioPath),
-    model: "whisper-1",
-  });
-  
-  // Clean up
-  fs.unlinkSync(audioPath);
-  
-  return transcription.text;
-  */
+  try {
+    console.log('Extracting audio from YouTube video:', youtubeId);
+    
+    // Check if video is available and get info
+    const videoUrl = `https://www.youtube.com/watch?v=${youtubeId}`;
+    const info = await ytdl.getInfo(videoUrl);
+    
+    if (!info) {
+      throw new Error('Could not fetch video information');
+    }
+    
+    console.log(`Video found: "${info.videoDetails.title}" - Duration: ${info.videoDetails.lengthSeconds}s`);
+    
+    // Check video duration (Whisper has limits)
+    const durationSeconds = parseInt(info.videoDetails.lengthSeconds || '0');
+    if (durationSeconds > 1800) { // 30 minutes limit for efficiency
+      throw new Error('Video too long for Whisper transcription (max 30 minutes)');
+    }
+    
+    // Extract audio stream (best quality audio-only)
+    const audioStream = ytdl(videoUrl, {
+      filter: 'audioonly',
+      quality: 'highestaudio',
+    });
+    
+    const writeStream = createWriteStream(audioPath);
+    audioStream.pipe(writeStream);
+    
+    // Wait for audio extraction to complete
+    await new Promise<void>((resolve, reject) => {
+      writeStream.on('finish', () => {
+        console.log('Audio extraction completed:', audioPath);
+        resolve();
+      });
+      writeStream.on('error', reject);
+      audioStream.on('error', reject);
+    });
+    
+    console.log('Sending audio to OpenAI Whisper API...');
+    
+    // Transcribe with Whisper
+    const transcription = await openai.audio.transcriptions.create({
+      file: createReadStream(audioPath),
+      model: "whisper-1",
+      response_format: "text",
+      language: "en", // Can be auto-detected by omitting this
+    });
+    
+    console.log('Whisper transcription completed');
+    
+    if (!transcription || transcription.trim().length === 0) {
+      throw new Error('Whisper returned empty transcription');
+    }
+    
+    return transcription.trim();
+    
+  } catch (error) {
+    console.error('Whisper transcription failed:', error);
+    throw error;
+  } finally {
+    // Clean up temporary audio file
+    try {
+      unlinkSync(audioPath);
+      console.log('Temporary audio file cleaned up:', audioPath);
+    } catch (cleanupError) {
+      console.warn('Failed to clean up audio file:', cleanupError);
+    }
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -102,27 +139,42 @@ export async function POST(request: NextRequest) {
 
     // Fetch the actual transcript from YouTube (with Whisper fallback)
     let transcript = '';
-    const transcriptSource = 'youtube'; // Will be used for future metadata tracking
+    let transcriptSource = 'youtube';
     
     try {
       const transcriptData = await YoutubeTranscript.fetchTranscript(youtubeId);
       transcript = transcriptData.map((item: { text: string }) => item.text).join(' ');
-      console.log('Transcript fetched from YouTube captions');
+      console.log(`✅ Transcript fetched from YouTube captions (${transcript.length} characters)`);
     } catch (transcriptError) {
-      console.error('Failed to fetch YouTube transcript:', transcriptError);
+      console.error('❌ Failed to fetch YouTube transcript:', transcriptError);
       
       // Fallback to Whisper API for videos without captions
       try {
-        console.log('Attempting Whisper fallback for video:', youtubeId);
+        console.log('🔄 Attempting Whisper fallback for video:', youtubeId);
         transcript = await transcribeWithWhisper(youtubeId);
-        // transcriptSource = 'whisper'; // Future enhancement
-        console.log('Transcript generated using Whisper API');
+        transcriptSource = 'whisper';
+        console.log(`✅ Transcript generated using Whisper API (${transcript.length} characters)`);
       } catch (whisperError) {
-        console.error('Whisper fallback also failed:', whisperError);
-        return NextResponse.json(
-          { error: 'Could not fetch video transcript. The video may not have captions available and Whisper transcription failed.' },
-          { status: 404 }
-        );
+        console.error('❌ Whisper fallback also failed:', whisperError);
+        
+        // Provide more specific error messages
+        const errorMessage = whisperError instanceof Error ? whisperError.message : 'Unknown error';
+        if (errorMessage.includes('too long')) {
+          return NextResponse.json(
+            { error: 'Video is too long for transcription (maximum 30 minutes supported).' },
+            { status: 400 }
+          );
+        } else if (errorMessage.includes('private') || errorMessage.includes('unavailable')) {
+          return NextResponse.json(
+            { error: 'Video is private or unavailable for transcription.' },
+            { status: 403 }
+          );
+        } else {
+          return NextResponse.json(
+            { error: 'Could not transcribe video. The video may not have captions and automatic transcription failed.' },
+            { status: 404 }
+          );
+        }
       }
     }
 
@@ -169,6 +221,8 @@ export async function POST(request: NextRequest) {
       max_tokens: 2000
     });
 
+    console.log(`📊 Analysis completed using ${transcriptSource} transcript source`);
+    
     const result = completion.choices[0]?.message?.content;
     if (!result) {
       throw new OpenAIAPIError('No analysis generated');

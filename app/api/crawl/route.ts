@@ -63,9 +63,9 @@ export async function POST(request: NextRequest) {
         // Return existing video data
         const response: CrawlResponse = {
           videoId: existingVideo[0].id,
-          title: existingVideo[0].title,
-          channel: existingVideo[0].channel,
-          duration: existingVideo[0].durationSeconds,
+          title: existingVideo[0].title || 'Unknown Title',
+          channel: existingVideo[0].channel || 'Unknown Channel', 
+          duration: existingVideo[0].durationSeconds || 0,
           thumbnailUrl: existingVideo[0].thumbnailUrl || undefined,
           hasCaption: true, // We'll check this separately
           transcriptPreview: undefined
