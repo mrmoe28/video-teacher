@@ -53,14 +53,22 @@ export default function VideoDetailPage(props: { params: Promise<{ id: string }>
       try {
         setLoading(true);
         
+        // Validate video ID format first
+        const isValidYouTubeId = /^[a-zA-Z0-9_-]{11}$/.test(id);
+        if (!isValidYouTubeId) {
+          setError(`Invalid video ID format: "${id}". Please provide a valid YouTube video ID (11 characters).`);
+          return;
+        }
+        
         // Load video progress data
         const progressResponse = await fetch(`/api/progress?videoId=${id}`);
         if (progressResponse.ok) {
           const data = await progressResponse.json();
           setVideoData(data);
         } else {
-          // If progress API fails, show error
-          setError('Failed to load video data. Please check if the video ID is valid.');
+          const errorData = await progressResponse.json();
+          setError(errorData.error || 'Failed to load video data. Please check if the video ID is valid.');
+          return;
         }
 
         // Load analysis data

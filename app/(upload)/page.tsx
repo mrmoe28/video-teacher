@@ -48,6 +48,8 @@ export default function UploadPage() {
       }
 
       const crawlData = await crawlResponse.json();
+      console.log('Crawl data received:', crawlData);
+      console.log('Video ID from crawl:', crawlData.videoId);
       setJobStatus('transcribing');
 
       // Start transcription job
@@ -83,6 +85,7 @@ export default function UploadPage() {
       setJobStatus('ready');
 
       // Navigate to video page
+      console.log('Navigating to:', `/video/${crawlData.videoId}`);
       router.push(`/video/${crawlData.videoId}`);
 
     } catch (err) {
@@ -97,11 +100,20 @@ export default function UploadPage() {
   useEffect(() => {
     const videoId = searchParams.get('videoId') || searchParams.get('videoid');
     if (videoId) {
-      // Construct the YouTube URL from the video ID
-      const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
-      setUrl(youtubeUrl);
-      // Automatically start processing
-      handleAnalyzeWithUrl(youtubeUrl);
+      // Validate that this is a proper YouTube video ID (11 characters, alphanumeric + _ -)
+      const isValidYouTubeId = /^[a-zA-Z0-9_-]{11}$/.test(videoId);
+      
+      if (isValidYouTubeId) {
+        // Construct the YouTube URL from the video ID
+        const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
+        setUrl(youtubeUrl);
+        // Automatically start processing
+        handleAnalyzeWithUrl(youtubeUrl);
+      } else {
+        // Invalid video ID format - show error
+        setError(`Invalid video ID format: "${videoId}". Please provide a valid YouTube video ID.`);
+        setJobStatus('error');
+      }
     }
   }, [searchParams, handleAnalyzeWithUrl]);
 
